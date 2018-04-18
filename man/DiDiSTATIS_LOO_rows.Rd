@@ -7,12 +7,16 @@
 DiDiSTATIS_LOO_rows(input, Hierarchy_of_tables, res_BaryGrand, multiplier = 1)
 }
 \arguments{
-\item{input}{Items input to DiDiSTATIS}
+\item{input}{A list of things input to DiDiSTATIS}
+
+\item{Hierarchy_of_tables}{Output of GetBaryGrandComp()}
+
+\item{res_BaryGrand}{Output of EigenDiDiSTATIS()}
 
 \item{multiplier}{to increase the number of iterations}
 }
 \value{
-Prediction_Random
+A list of the LOO results
 }
 \description{
 Leave One Out cross-validation for the rows for DiDiSTATIS

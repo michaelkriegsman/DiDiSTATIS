@@ -10,7 +10,7 @@ library(DiDiSTATIS)
 ## 1. Load data (called Sort) and DESIGN (called DESIGN)
 #for Free Sort of natural stimuli (Dowling, W.J.)
 # DESIGNs <- Initialize_DESIGNs(DESIGN_rows_mat = , DESIGN_tables_mat = )
-source('C:/Users/Michael A. Kriegsman/Box Sync/Dissertation/DiDiSTATIS/vignettes/Initialize_Balanced_Dowling_NaturalStimuli_Example.R')
+source('C:/Users/Michael A. Kriegsman/Box Sync/Dissertation/RStudio2Git/DiDiSTATIS/vignettes/Initialize_Balanced_Dowling_NaturalStimuli_Example.R')
 
 
 ## 2. Analyze

@@ -4,10 +4,10 @@
 \alias{MDS}
 \title{Conduct metric multidimensional scaling}
 \usage{
-MDS(D, data_are = NULL, DESIGN, n2k = NULL, main = NULL)
+MDS(DATA, data_are = NULL, DESIGN, n2k = NULL, main = NULL)
 }
 \arguments{
-\item{D}{Traditionally, a distance matrix}
+\item{DATA}{The data}
 
 \item{data_are}{Flag to indicate data type #d, d2, CP}
 

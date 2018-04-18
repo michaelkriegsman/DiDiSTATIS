@@ -2,10 +2,6 @@
 #
 #'Conduct barycentric discriminant metric multidimensional scaling
 #'
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/Testing-DiMDS
 #'@param DATA A distance-data matrix
 #'@param data_are Flag to indicate data type #d, d2, CP, or X_to_cos, X_to_cov, X_to_cor
 #'@param DESIGN_rows Column vector(s) to discriminate rows (nominal or colors or DESIGN)
@@ -21,22 +17,13 @@
 #'@return Results of DiMDS
 #'@export
 
-<<<<<<< HEAD
 DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
                   Perm_rows = F, Perm_rows_niter = 1000,
                   Boot_rows = F, Boot_rows_niter = 1000,
                   LOO_rows = F,  LOO_rows_multiplier = 10,
                   SH_rows = F,   SH_rows_niter = 50){
 
-=======
 
-DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
-                  Perm_rows = F, Perm_rows_niter = 1000,
-                  Boot_rows = F, Boot_rows_niter = 1000,
-                  LOO_rows = F,  LOO_rows_multiplier = 10,
-                  SH_rows = F,   SH_rows_niter = 50){
-
->>>>>>> origin/Testing-DiMDS
   input <- list()
   input$DATA <- DATA
   input$data_are <- data_are
@@ -45,10 +32,7 @@ DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
   CP <- input$CP <- GetCP(DATA, data_are)
   input$SStotal <- sum(diag(CP))
 
-<<<<<<< HEAD
-  ##############Should do this stuff in the Initialize file, and will need to do this for the user...
-=======
->>>>>>> origin/Testing-DiMDS
+
   #Work on DESIGN_rows
   input$DESIGN_rows <- DESIGN_rows
   rm(DESIGN_rows)

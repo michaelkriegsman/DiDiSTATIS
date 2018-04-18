@@ -2,11 +2,11 @@
 #
 #'Leave One Out cross-validation for the rows for DiDiSTATIS
 #'
-#'@param input Items input to DiDiSTATIS
-#'@param Hierarchy_of_tables
-#'@param res_BaryGrand
+#'@param input A list of things input to DiDiSTATIS
+#'@param Hierarchy_of_tables Output of GetBaryGrandComp()
+#'@param res_BaryGrand Output of EigenDiDiSTATIS()
 #'@param multiplier to increase the number of iterations
-#'@return Prediction_Random
+#'@return A list of the LOO results
 #'@export
 
 DiDiSTATIS_LOO_rows <- function(input, Hierarchy_of_tables, res_BaryGrand, multiplier = 1){

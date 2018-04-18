@@ -13,11 +13,7 @@ Condense_Rows <- function(X, DESIGN_rows_mat){
   }
 
   row_averager <- solve(t(DESIGN_rows_mat) %*% DESIGN_rows_mat) %*% t(DESIGN_rows_mat)
-<<<<<<< HEAD
-=======
 
-
->>>>>>> origin/Testing-DiMDS
   #This is close to Takane's projection equation.
   #Takane's PbX gives A(B) rows.
   #Here, I omit the left-most matrix, to give only B rows.
