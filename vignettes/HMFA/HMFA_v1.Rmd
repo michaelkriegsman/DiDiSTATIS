@@ -1,0 +1,86 @@
+---
+title: "HMFA example"
+author: "Michael A. Kriegsman"
+date: "June 15, 2017"
+output: html_document
+#output: pdf_document
+#keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(DistatisR)
+library(ExPosition)
+library(DiDiSTATIS)
+```
+
+## Example: DiMDS
+
+#The data
+
+Text here about array of sorting distances.
+```{r}
+#read in the data
+SortFree_36 <- read.csv('C:/Users/Michael A. Kriegsman/Google Drive/Projects/DiDiSTATIS_Composers/WithMoreSubj_ForDissertation/natural36_free_forR.csv', row.names=1)
+Sort <- SortFree_36[-37,]
+```
+
+#The DESIGN
+
+Text here about subjects nested by level of musical experience--low, medium, high.
+
+```{r DESIGN$tables}
+#create the design. B, the design matrix for the A=36 musical pieces nested in the B=3 composers.
+
+MusExp <- t(SortFree_36[37,]) #subjects' musical experience
+colnames(MusExp) <- "MusExp"
+
+#Bin them
+#Low, Mid, High MusExp
+DESIGN <- list()
+DESIGN$tables$MusExp_vec <- MusExp
+DESIGN$tables$MusExp_vec[MusExp < 1] <- 'Low'
+DESIGN$tables$MusExp_vec[MusExp >= 1 & MusExp < 5] <- 'Mid'
+DESIGN$tables$MusExp_vec[MusExp >= 5] <- 'High'
+
+#Create the DESIGN_mat
+DESIGN$tables$MusExp_mat <- makeNominalData(as.matrix(DESIGN$tables$MusExp_vec))
+#With columns in a logical order
+DESIGN$tables$MusExp_mat <- DESIGN$tables$MusExp_mat[,c('MusExp.Low','MusExp.Mid','MusExp.High')]
+
+#Set group colors
+DESIGN$tables$MusExp_colors_D  <- c("dodgerblue", "tomato2", "goldenrod")
+DESIGN$tables$MusExp_colors_CD <- DESIGN$tables$MusExp_vec
+#(e.g., Subjects in group "Low" <- "dodgerblue")
+DESIGN$tables$MusExp_colors_CD <- replace(DESIGN$tables$MusExp_colors_CD, which(DESIGN$tables$MusExp_vec=="Low"), DESIGN$tables$MusExp_colors_D[1])
+DESIGN$tables$MusExp_colors_CD <- replace(DESIGN$tables$MusExp_colors_CD, which(DESIGN$tables$MusExp_vec=="Mid"), DESIGN$tables$MusExp_colors_D[2])
+DESIGN$tables$MusExp_colors_CD <- replace(DESIGN$tables$MusExp_colors_CD, which(DESIGN$tables$MusExp_vec=="High"), DESIGN$tables$MusExp_colors_D[3])
+```
+
+Also, (only) for color-coding purposes... DESIGN_rows
+```{r DESIGN$rows}
+#create the design. B, the design matrix for the A=36 musical pieces nested in the B=3 composers.
+DESIGN$rows$Composers_mat <- makeNominalData(as.matrix(rep(1:3,each=12)))
+colnames(DESIGN$rows$Composers_mat) <- c('Bach', 'Beethoven', 'Mozart')
+DESIGN$rows$Composer_colors_B  <- prettyGraphsColorSelection(3, offset=3) #prettyGraphs::createColorVectorsByDesign(DESIGN$rows$Composers_mat)$gc
+DESIGN$rows$Composer_colors_AB <- rep(prettyGraphsColorSelection(3, offset=3), each=12) #prettyGraphs::createColorVectorsByDesign(DESIGN$rows$Composers_mat)$oc
+```
+
+# Let's go for it
+
+```{r}
+## Preprocess
+#Convert Sort to Distance
+D2_array <- DistanceFromSort(Sort)
+
+A  <- dim(D2_array)[1]
+B  <- ncol(DESIGN$rows$Composers_mat)
+CD <- dim(D2_array)[3] # == nrow(DESIGN_tables)
+D  <- ncol(DESIGN$tables$MusExp_mat)
+```
+
+```{r, include=FALSE}
+#take in an array of squared distance matrices, and a DESIGN on the tables, and return everything
+res_HMFA <- HMFA(D2_array, DESIGN_tables = DESIGN$tables$MusExp_mat, main = "FreeSort36 Composers")
+### Actually... this code doesn't produce figures in Rmd, so I'm gonna break HiDiSTATIS.R into its functions and paste them into the chunk below
+```

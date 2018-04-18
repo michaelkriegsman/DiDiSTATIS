@@ -1,0 +1,130 @@
+---
+title: "DiDiSTATIS example"
+author: "Michael A. Kriegsman"
+date: "August 21, 2017"
+output: html_document
+#output: pdf_document
+#keep_tex: yes
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(DistatisR)
+library(ExPosition)
+library(DiDiSTATIS)
+```
+
+## Example: DiMDS
+
+#The data
+
+Text here about array of sorting distances. 
+```{r}
+#read in the data 
+SortFree_36 <- read.csv('C:/Users/Michael A. Kriegsman/Google Drive/Projects/DiDiSTATIS_Composers/WithMoreSubj_ForDissertation/natural36_free_forR.csv', row.names=1)
+Sort <- SortFree_36[-37,]
+```
+
+#The DESIGN
+
+Text here about subjects nested by level of musical experience--low, medium, high. 
+
+
+```{r DESIGN$rows}
+MusExp <- t(SortFree_36[37,]) #subjects' musical experience
+colnames(MusExp) <- "MusExp"
+
+###make the user input #labels# and #vec#
+### I can always get from $vec and $labels to $mat and $colors_ 
+
+###need functions to start creating the DESIGN matrix:
+#1. input the labels
+#2. Create $vec. 
+### if in a simple order, just use rep()
+### if nominal but out of order, initialize the order as the variable name, in $vec trade numbers for labels
+### if numeric, cut into categories, and assign the labels. 
+
+#all this (labels, vec, mat, B, AB, colors_B, colors_AB) can go into a single function, for each DESIGN variable. At the end fo the function, name the DESIGN list items. In the function, always use B and AB, and so avoid the issue of using the variables "C" and "D". Can still name them D and CD when creating the DESIGN_list. 
+
+############################need###############################
+#labels, breaks, colors_B
+############################need###############################
+
+DESIGN <- list()
+
+#create the design. B, the design matrix for the A=36 musical pieces nested in the B=3 composers.
+DESIGN$rows$Comp$labels <- c('Bach', 'Beethoven', 'Mozart')
+DESIGN$rows$Comp$vec <- rep(DESIGN$rows$Comp$labels,each=12)
+DESIGN$rows$Comp$mat <- makeNominalData(as.matrix(DESIGN$rows$Comp$vec))[, paste0(".", DESIGN$rows$Comp$labels)]
+colnames(DESIGN$rows$Comp$mat) <- DESIGN$rows$Comp$labels
+
+DESIGN$rows$Comp$B  <- ncol(DESIGN$rows$Comp$mat)
+DESIGN$rows$Comp$AB <- nrow(DESIGN$rows$Comp$mat)
+
+DESIGN$rows$Comp$colors_B  <- prettyGraphsColorSelection(3, offset=3)
+DESIGN$rows$Comp$colors_AB <- as.matrix(DESIGN$rows$Comp$vec)
+for(b in 1:DESIGN$rows$Comp$B){
+  DESIGN$rows$Comp$colors_AB[which(DESIGN$rows$Comp$mat[,b]==1)] <- DESIGN$rows$Comp$colors_B[b]
+}
+```
+
+```{r DESIGN$tables}
+#create the design. B, the design matrix for the A=36 musical pieces nested in the B=3 composers.
+
+
+#Bin them
+#Low, Mid, High MusExp
+
+###continuous: cut into categories
+DESIGN$tables$MusExp$MusExp <- MusExp
+DESIGN$tables$MusExp$labels <- c('Low', 'Mid', 'High')
+#cut the DESIGN variable
+DESIGN$tables$MusExp$vec <- cut(x = DESIGN$tables$MusExp$MusExp, breaks = c(-1,.5, 5, 50), labels = DESIGN$tables$MusExp$labels) #0-0.9; 1-4.9, 5+
+#create the DESIGN matrix, with columns in order
+DESIGN$tables$MusExp$mat    <- makeNominalData(as.matrix(DESIGN$tables$MusExp$vec))[, paste0(".", DESIGN$tables$MusExp$labels)]
+colnames(DESIGN$tables$MusExp$mat) <- DESIGN$tables$MusExp$labels
+
+DESIGN$tables$MusExp$D  <- ncol(DESIGN$tables$MusExp$mat)
+DESIGN$tables$MusExp$CD <- nrow(DESIGN$tables$MusExp$mat)
+
+#Set group colors
+DESIGN$tables$MusExp$colors_D  <- c("dodgerblue", "tomato2", "goldenrod")
+DESIGN$tables$MusExp$colors_CD <- as.matrix(DESIGN$tables$MusExp$vec)
+for(d in 1:DESIGN$tables$MusExp$D){
+  DESIGN$tables$MusExp$colors_CD[which(DESIGN$tables$MusExp$mat[,d]==1)] <- DESIGN$tables$MusExp$colors_D[d]
+}
+```
+
+Also, (only) for color-coding purposes... DESIGN_rows
+
+
+# Let's go for it
+
+```{r}
+## Preprocess
+#Convert Sort to Distance
+D2_array <- DistanceFromSort(Sort)
+
+# A  <- dim(D2_array)[1]
+# B  <- ncol(DESIGN$rows$Composers_mat)
+# CD <- dim(D2_array)[3] # == nrow(DESIGN_tables)
+# D  <- ncol(DESIGN$tables$MusExp_mat)
+```
+
+```{r, include=FALSE}
+#take in an array of squared distance matrices, and a DESIGN on the tables, and return everything
+res_DiDiSTATIS <- DiDiSTATIS(Data_array=D2_array, data_are='D2_array', DESIGN_rows = DESIGN$rows$Comp, DESIGN_tables = DESIGN$tables$MusExp)
+###Don't want to use Rmd. 
+
+### What is the role of DESIGN_tables? Obviously, the new version should just take DESIGN$...
+###and will have no "main", because the compute function will not plot.
+
+### Actually... this code doesn't produce figures in Rmd, so I'm gonna break HiDiSTATIS.R into its functions and paste them into the chunk below
+```
+
+```{r}
+CP_array <- Dist2CP(D2_array)
+HiDiSTATIS_collapsed <- GetGrandCompromise(CP_array, DESIGN_tables = DESIGN$tables$MusExp_mat)
+res_HiDiSTATIS <- EigenHiDiSTATIS(HiDiSTATIS_collapsed, DESIGN, n2k=n2k)
+PlotHiDiSTATIS(res_HiDiSTATIS, axes=c(1,2), main = "FreeSort36 Composers")
+```

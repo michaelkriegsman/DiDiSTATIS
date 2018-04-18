@@ -1,0 +1,117 @@
+---
+title: "DiMDS example"
+author: "Michael A. Kriegsman"
+date: "May 18, 2017"
+output: html_document
+#output: pdf_document
+#keep_tex: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(DistatisR)
+library(ExPosition)
+library(DiDiSTATIS)
+```
+
+## Example: DiMDS
+
+#The data, S
+For this example, I adapt the data from the chapter on DiSTATIS.
+Although these data are an array of distance matrices, DiSTATIS collapses 
+the tables into a single representative table, called the compromise.
+This compromise is a 36 by 36 (psd) matrix of the perceived similarity 
+between 36 pieces of classical music. 
+Here, I denote the compromise S, where S is the input to DiMDS. 
+(Note that in DiSTATIS, the compromise is called Splus)
+
+```{r TheData}
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Testing-DiMDS
+## Archived Notes
+## I ran DiDiSTATIS_Composers_free_36.R (despite the name, this is a standard DiSTATIS) on 5.16.17 and saved out compromise as CompromiseForDiMDS
+## S <- RvDiSTATIS_Composers.res$res4GPCA$Splus
+## save("S", file = "CompromiseForDiMDS.rda")
+
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Testing-DiMDS
+#read in the data, S, the compromise from DiSTATIS (from Part II of the dissertation).
+load('C:/Users/Michael A. Kriegsman/Google Drive/Dissertation/DiDiSTATIS/DiDiSTATIS/vignettes/DiMDS/CompromiseForDiMDS.rda')
+#round(S, 3)
+```
+
+#The design, B
+The pieces of classical music (stimuli, rows)
+are organized into a 2-factor completely between design. That is, 
+each piece was composed by 1 of 3 composers, and played by 1 of 4 
+pianists. For the dissertation proposal, I will only investigate
+the effect of composer. 
+
+```{r DESIGN$rows}
+#create the design. B, the design matrix for the A=36 musical pieces nested in the B=3 composers.
+DESIGN <- list()
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Testing-DiMDS
+DESIGN$rows$Composers_mat <- makeNominalData(as.matrix(rep(1:3,each=12)))
+colnames(DESIGN$rows$Composers_mat) <- c('Bach', 'Beethoven', 'Mozart')
+B <- DESIGN$rows$Composers_mat
+#B
+
+DESIGN$rows$Composer_colors_B  <- prettyGraphsColorSelection(3, offset=3)
+DESIGN$rows$Composer_colors_AB <- rep(prettyGraphsColorSelection(3, offset=3), each=12)
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/Testing-DiMDS
+```
+
+#Let's go!
+
+```{r DiMDS}
+<<<<<<< HEAD
+res_MDS <- MDS(D = S, data_are = 'CP', DESIGN_rows = B, main = 'FreeSort36 Composers')
+#Feed DiMDS the goods
+res_DiMDS <- DiMDS(D = S, data_are = 'CP', DESIGN_rows = B, main = 'FreeSort36 Composers')
+=======
+
+res_MDS <- MDS(D = S, data_are = 'CP', DESIGN_rows = B, main = 'FreeSort36 Composers')
+#Feed DiMDS the goods
+res_DiMDS <- DiMDS(D = S, data_are = 'CP', DESIGN_rows = B, main = 'FreeSort36 Composers')
+
+>>>>>>> origin/Testing-DiMDS
+```
+
+Consider the effect size(s):
+
+$r^2_{Total \cdot B}$
+```{r}
+#The portion of the total barycentric space explained by the barycenters (Composers)
+round(res_DiMDS$r2$total.b,3)
+```
+
+$r^2_{TotalTotal \cdot B}$
+```{r}
+#The portion of the original data explained by the barycenters (Composers)
+round(res_DiMDS$r2$totaltotal.b,3)
+```
+
+There is a large discrepency between the size of the barycentric space and the size of the original data.   
+This shows that the hypothesized between-group effect is small (and/or the data are highly variable).
+
+Given the small effect, let's inspect, respectively, 
+Fb: the group barycenters in the barycentric factor scores,
+F:  the original data projected intot he barycentric factor space
+...
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Testing-DiMDS

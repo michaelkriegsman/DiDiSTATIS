@@ -1,0 +1,18 @@
+Package: DiDiSTATIS
+Type: Package
+Title: Run DiDiSTATIS and related methods
+Version: 0.1.0
+Author: Michael A. Kriegsman
+Maintainer: Michael A. Kriegsman <kriegsman.1@gmail.com>
+Description: This package runs the multivariate statistical methods
+    developed in my dissertation, namely DiMDS, HiDiSTATIS, and DiDiSTATIS. 
+Depends:
+    DistatisR,
+    ExPosition,
+    prettyGraphs,
+    corrplot,
+    viridis
+License: What license is it under?
+Encoding: UTF-8
+LazyData: TRUE
+RoxygenNote: 6.0.1
