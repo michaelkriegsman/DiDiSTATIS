@@ -40,7 +40,7 @@ for(d in 1:res_DiDiSTATIS$input$DESIGN_tables$D){
 }
 
 
-
+library(PlotDiDiSTATIS)
 
 # PlotDiDiSTATIS
 PlotDiDiSTATIS(res_DiDiSTATIS)
