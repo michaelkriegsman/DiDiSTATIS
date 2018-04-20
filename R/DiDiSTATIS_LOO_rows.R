@@ -68,10 +68,10 @@ DiDiSTATIS_LOO_rows <- function(input, Hierarchy_of_tables, res_BaryGrand, multi
   #                                     dimnames = list(paste0(DESIGN_rows$labels, "_out"), colnames(res_Disc_Full$eig$Fb_Full), paste0('iter ',1:total_iter)))
 
 
-  #for each iteration...
+  #for each iteration... ####
   for(i in 1:total_iter){
 
-    ### Analyze the LeftIn tables ###
+    ###** Analyze the LeftIn rows ####
     #Define the array of LeftIn rows
     for(cd in 1:DESIGN_tables$CD){
       CP_array_LeftIn[,,cd]  <- input$CP_array[-Leave_out_these_rows[,i], -Leave_out_these_rows[,i], cd]
@@ -117,15 +117,18 @@ DiDiSTATIS_LOO_rows <- function(input, Hierarchy_of_tables, res_BaryGrand, multi
 
 
 
-    #Start working with the LeftOut rows
+    # ** Work on LeftOut rows ####
 
     #Integrate these CD rectangular (AB_out * AB_in) tables into a single table
-    for(CD in 1:DESIGN_tables$CD){
-      which_group <- which(DESIGN_tables$mat[CD,]==1)
-      OverWeighted_LeftOut_tables[,,CD] <- CP_array_LeftOut[,,CD] * Hierarchy_of_tables_LeftIn$coef$dilate1
-        Hierarchy_of_tables_LeftIn$coef$MFA1[CD] * Hierarchy_of_tables_LeftIn$coef$alpha1[CD] *
-        Hierarchy_of_tables_LeftIn$coef$dilate2 * Hierarchy_of_tables_LeftIn$coef$MFA2[which_group] *
-        Hierarchy_of_tables_LeftIn$coef$alpha2[which_group]
+    for(cd in 1:DESIGN_tables$CD){
+      which_group <- which(DESIGN_tables$mat[cd,]==1)
+      OverWeighted_LeftOut_tables[,,cd] <- (CP_array_LeftOut[,,cd] *
+                                            Hierarchy_of_tables_LeftIn$coef$dilate1 *
+                                            Hierarchy_of_tables_LeftIn$coef$MFA1[cd] *
+                                            Hierarchy_of_tables_LeftIn$coef$alpha1[cd] *
+                                            Hierarchy_of_tables_LeftIn$coef$dilate2 *
+                                            Hierarchy_of_tables_LeftIn$coef$MFA2[which_group] *
+                                            Hierarchy_of_tables_LeftIn$coef$alpha2[which_group])
 
 
       # F_LeftOut_Tables[,,cd_out] <- OverWeighted_LeftOut_tables[,,cd_out] %*% res_GrandComp_LeftIn$eig$ProjMat
