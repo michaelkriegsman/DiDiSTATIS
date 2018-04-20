@@ -10,11 +10,10 @@ library(DiDiSTATIS)
 ## 1. Load data (called Sort) and DESIGN (called DESIGN)
 #for Free Sort of natural stimuli (Dowling, W.J.)
 # DESIGNs <- Initialize_DESIGNs(DESIGN_rows_mat = , DESIGN_tables_mat = )
-source('C:/Users/Michael A. Kriegsman/Box Sync/Dissertation/RStudio2Git/DiDiSTATIS/vignettes/Initialize_Balanced_Dowling_NaturalStimuli_Example.R')
+source('C:/Users/Michael A. Kriegsman/Box Sync/Dissertation/RStudio2Git/DiDiSTATIS/vignettes/My Examples/Initialize_Balanced_Dowling_NaturalStimuli_Example.R')
 
 
-## 2. Analyze
-# Preprocessing  (double centering sorting data) is now done within DiDiSTATIS
+## 2. Analyze (Preprocessing is done according to what the 'data_are')
 res_DiDiSTATIS <- DiDiSTATIS(DATA = Sort_balanced, data_are = 'sort', n2k = NULL,
                              DESIGN_rows = DESIGN$rows$Comp, #DESIGNS$DESIGN_rows
                              DESIGN_tables = DESIGN$tables$MusExp, #DESIGNS$DESIGN_tables
@@ -23,7 +22,7 @@ res_DiDiSTATIS <- DiDiSTATIS(DATA = Sort_balanced, data_are = 'sort', n2k = NULL
                              Perm_omni_sort = F, Perm_omni_sort_niter=100,
                              Boot_tables = F, Boot_tables_niter = 1000,
                              LOO_rows = F, LOO_rows_multiplier=2,
-                             SH_rows = F, SH_rows_niter=100) #,
+                             SH_rows = F, SH_rows_niter=100)
 
 res_DiDiSTATIS$input$DESIGN_rows$colors_B   <- c('#3c81c1', '#7d4dbc', '#52af6f') #possible 4th color... brown #9d6725 or #714107
 for(b in 1:res_DiDiSTATIS$input$DESIGN_rows$B){

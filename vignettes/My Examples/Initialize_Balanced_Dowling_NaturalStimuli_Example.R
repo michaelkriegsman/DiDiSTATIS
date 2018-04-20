@@ -47,12 +47,14 @@ DESIGN$rows$Comp$Pb_Cond  <- Bary_Projector_Cond(DESIGN$rows$Comp$mat)
 DESIGN$rows$Comp$B  <- ncol(DESIGN$rows$Comp$mat)
 DESIGN$rows$Comp$AB <- nrow(DESIGN$rows$Comp$mat)
 
-DESIGN$rows$Comp$colors_B  <- prettyGraphsColorSelection(3, offset=3)
+
+# DESIGN$rows$Comp$colors_B  <- prettyGraphsColorSelection(3, offset=3)
+DESIGN$rows$Comp$colors_B  <- c('#3c81c1', '#7d4dbc', '#52af6f') #possible 4th color... brown #9d6725 or #714107
 DESIGN$rows$Comp$colors_AB <- DESIGN$rows$Comp$vec
 for(b in 1:DESIGN$rows$Comp$B){
   DESIGN$rows$Comp$colors_AB[which(DESIGN$rows$Comp$mat[,b]==1)] <- DESIGN$rows$Comp$colors_B[b]
 }
-# DESIGN$rows$Comp$colors_AB <- rep(prettyGraphsColorSelection(3, offset=3), each=12)
+
 
 ### DESIGN$tables
 #Low, Mid, High MusExp
@@ -76,7 +78,8 @@ DESIGN$tables$MusExp$D  <- ncol(DESIGN$tables$MusExp$mat)
 DESIGN$tables$MusExp$CD <- nrow(DESIGN$tables$MusExp$mat)
 
 #Set group colors
-DESIGN$tables$MusExp$colors_D  <- c("dodgerblue", "tomato2", "goldenrod")
+# DESIGN$tables$MusExp$colors_D  <- c("dodgerblue", "tomato2", "goldenrod")
+DESIGN$tables$MusExp$colors_D  <- c('#fcd305','#ed961c','#ce5050')
 DESIGN$tables$MusExp$colors_CD <- as.matrix(DESIGN$tables$MusExp$vec)
 for(d in 1:DESIGN$tables$MusExp$D){
   DESIGN$tables$MusExp$colors_CD[which(DESIGN$tables$MusExp$mat[,d]==1)] <- DESIGN$tables$MusExp$colors_D[d]
