@@ -4,7 +4,6 @@
 #'
 #'@param input Items input to DiMDS
 #'@param res_Disc_Full Output from decomposing the barycentric discriminant sub-space
-#'@param res_Disc_Cond Output from decomposing the barycentric discriminant sub-space
 #'@param niter Number of iterations (permutations)
 #'@return Permuted output
 #'@export
@@ -12,7 +11,6 @@
 
 DiMDS_perm_rows <- function(input = NULL,
                             res_Disc_Full = NULL,
-                            res_Disc_Cond = NULL,
                             niter = 100){
 
   #Initialize objects
@@ -52,14 +50,15 @@ DiMDS_perm_rows <- function(input = NULL,
     res_Disc_Full.perm <- EigenCP_Full(CP = Pb_CP_Pb_Full.perm,
                                        DESIGN_rows = input$DESIGN_rows)
     names(res_Disc_Full.perm$input) <- "Pb_CP_Pb_Full.perm"
-    names(res_Disc_Full.perm$eig) <- c("Ub_Full.perm", "Ub_Cond.perm", "Ub_Cond_Sqrt.perm",
+    names(res_Disc_Full.perm$eig) <- c("Ub_Full.perm", "Ub_Cond.perm",
                                        "Lambdab_vec.perm", "Lambdab.perm",
-                                       "ProjMatb_Full.perm", "ProjMatb_Cond.perm", "ProjMatb_Cond_Sqrt.perm",
-                                       "tb.perm", "Fb_Full.perm", "Fb_Cond.perm", "Fb_Cond_Sqrt.perm",
+                                       "ProjMatb_Full.perm", "ProjMatb_Cond.perm",
+                                       "tb.perm",
+                                       "Fb_Full.perm", "Fb_Cond.perm",
                                        "Ctrbb_Full.perm", "Ctrbb_Cond.perm")
 
     Fdisc.perm <- input$CP %*% Pb_Full.perm %*% res_Disc_Full.perm$eig$ProjMatb_Full.perm
-    #             input$CP                  %*% res_Disc_Full.perm$eig$ProjMatb_Full.perm
+    # equivalent: input$CP                  %*% res_Disc_Full.perm$eig$ProjMatb_Full.perm
 
     SSdisc.perm[i] <- SS_from_F(Fdisc.perm)
 
