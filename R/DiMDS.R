@@ -24,70 +24,47 @@ DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
                   SH_rows = F,   SH_rows_niter = 50){
 
 
-  input <- list()
-  input$DATA <- DATA
-  input$data_are <- data_are
+  #Setup the input list ####
+  input <- list(DATA = DATA,
+                data_are = data_are,
+                CP = NULL,
+                SSplain = NULL,
+                DESIGN_rows = DESIGN_rows)
 
   #Convert data to CP
   CP <- input$CP <- GetCP(DATA, data_are)
-  input$SStotal <- sum(diag(CP))
+  input$SSplain <- sum(diag(CP))
 
 
-  #Work on DESIGN_rows
-  input$DESIGN_rows <- DESIGN_rows
-  rm(DESIGN_rows)
-
-  #Define the full projector matrices, for computing
-  Pb_Full  <- input$DESIGN_rows$Pb_Full <- Bary_Projector(input$DESIGN_rows$mat)
-  ### Pab_Full <- input$DESIGN_rows$Pab_Full <- Ortho_Projector(Pb_Full)
-
-  ### #Define the compressed projector matrices, for plotting
-  Pb_Cond  <- input$DESIGN_rows$Pb_Cond <- Bary_Projector_Cond(input$DESIGN_rows$mat)
-  ### PbT <- input$DESIGN_rows$PbT <- t(Pb)
-
-  Pb_Cond_Sqrt <- input$DESIGN_rows$Pb_Cond_Sqrt <- Bary_Projector_Cond_Sqrt(input$DESIGN_rows$mat)
-
-  BtB      <- input$DESIGN_rows$BtB      <-      (t(input$DESIGN_rows$mat) %*% input$DESIGN_rows$mat)
-  BtB_sqrt <- input$DESIGN_rows$BtB_sqrt <- sqrt((t(input$DESIGN_rows$mat) %*% input$DESIGN_rows$mat))
-
-  Pb_Cond_Inv <- input$DESIGN_rows$mat %*% sqrt(t(input$DESIGN_rows$mat) %*% input$DESIGN_rows$mat)
-
-  #Define (and compute on) the barycentric sub-space
-  Pb_CP_Pb_Full <- input$Pb_CP_Pb_Full <- Pb_Full %*% CP %*% Pb_Full
-  input$SSb_Full       <- sum(diag(Pb_CP_Pb_Full))
-  input$r2total.b_Full <- input$SSb_Full / input$SStotal
+  #Compute the barycentric sub-space ####
+  Pb_CP_Pb_Full   <- input$Pb_CP_Pb_Full <- DESIGN_rows$Pb_Full %*% CP %*% DESIGN_rows$Pb_Full
+  input$SSb       <- sum(diag(Pb_CP_Pb_Full))
+  input$r2plain.b <- input$SSb / input$SSplain
 
 
-
-
-
-
-
-
-
-  #Decompose the barycentric sub-space
-  res_Disc_Full <- EigenCP_Full(CP = Pb_CP_Pb_Full, DESIGN_rows = input$DESIGN_rows)
+  #Decompose the barycentric sub-space ####
+  res_Disc_Full <- EigenCP_Full(CP = Pb_CP_Pb_Full, DESIGN_rows = DESIGN_rows, n2k=n2k)
   names(res_Disc_Full$input) <- "Pb_CP_Pb_Full"
-  names(res_Disc_Full$eig) <- c("Ub_Full", "Ub_Cond", "Ub_Cond_Sqrt", "Lambdab_vec", "Lambdab", "ProjMatb_Full",
-                                "ProjMatb_Cond", "ProjMatb_Cond_Sqrt", "tb", "Fb_Full", "Fb_Cond", "Fb_Cond_Sqrt",
+  names(res_Disc_Full$eig) <- c("Ub_Full", "Ub_Cond",
+                                "Lambdab_vec", "Lambdab",
+                                "ProjMatb_Full", "ProjMatb_Cond",
+                                "tb",
+                                "Fb_Full", "Fb_Cond",
                                 "Ctrbb_Full", "Ctrbb_Cond")
 
-  #Project the various segments of the data into the barycentric sub-sapce
-  res_Disc_Full$proj2Bary$Fb_Full         <- Pb_CP_Pb_Full         %*% res_Disc_Full$eig$ProjMatb_Full
-  res_Disc_Full$proj2Bary$Fb_condensed    <- Condense_Rows(res_Disc_Full$proj2Bary$Fb_Full, input$DESIGN_rows$mat)
-  res_Disc_Full$proj2Bary$Fb_condensed_v2 <- Pb_Cond_Sqrt %*% CP %*% t(Pb_Cond_Sqrt) %*% res_Disc_Full$eig$ProjMatb_Cond
-  res_Disc_Full$proj2Bary$Fdisc    <- CP %*% Pb_Full %*% res_Disc_Full$eig$ProjMatb_Full
-  # res_Disc_Full$proj2Bary$Fdisc_v2 <- CP %*% t(Pb_Cond_Sqrt) %*% res_Disc_Full$eig$ProjMatb_Cond
-  # res_Disc_Full$proj2Bary$Fdisc_v3 <- CP %*% t(Pb_Cond) %*% res_Disc_Full$eig$ProjMatb_Cond_Sqrt
-  res_Disc_Full$proj2Bary$Fab   <- res_Disc_Full$proj2Bary$Fdisc - res_Disc_Full$proj2Bary$Fb_Full
+  #Project into the barycentric sub-sapce ####
+  res_Disc_Full$proj2Bary$Fb_Full <- Pb_CP_Pb_Full %*% res_Disc_Full$eig$ProjMatb_Full
+  res_Disc_Full$proj2Bary$Fb_Cond <- Condense_Rows(res_Disc_Full$proj2Bary$Fb_Full, DESIGN_rows$mat)
 
-  #... and compute the associated summary statistics
-  res_Disc_Full$proj2Bary$SSb       <- SS_from_F(res_Disc_Full$proj2Bary$Fb_Full)
-  res_Disc_Full$proj2Bary$SSb_v2    <- SS_from_F(input$DESIGN_rows$Pb_Cond_Sqrt %*% res_Disc_Full$proj2Bary$Fb_Full)
+  res_Disc_Full$proj2Bary$Fdisc   <- CP %*% DESIGN_rows$Pb_Full %*% res_Disc_Full$eig$ProjMatb_Full
+  # equivalently:                    CP %*%                         res_Disc_Full$eig$ProjMatb_Full
+  res_Disc_Full$proj2Bary$Fab     <- res_Disc_Full$proj2Bary$Fdisc - res_Disc_Full$proj2Bary$Fb_Full
+
+  #... and compute summary statistics ####
+  res_Disc_Full$proj2Bary$SSb    <- SS_from_F(res_Disc_Full$proj2Bary$Fb_Full)
   res_Disc_Full$proj2Bary$SSdisc <- SS_from_F(res_Disc_Full$proj2Bary$Fdisc)
   res_Disc_Full$proj2Bary$SSab   <- SS_from_F(res_Disc_Full$proj2Bary$Fab)
-
-  res_Disc_Full$proj2Bary$SSe <- input$SStotal - res_Disc_Full$proj2Bary$SSdisc
+  res_Disc_Full$proj2Bary$SSe <- input$SSplain - res_Disc_Full$proj2Bary$SSdisc
 
   res_Disc_Full$proj2Bary$r2disc.B <- res_Disc_Full$proj2Bary$SSb / res_Disc_Full$proj2Bary$SSdisc
 
@@ -98,50 +75,23 @@ DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
 
 
 
-
-  #Decompose the barycentric sub-space (again...)
-  # Pb_CP_Pbt_Cond <- input$Pb_CP_Pbt_Cond <- Pb_Cond_Sqrt %*% CP %*% t(Pb_Cond_Sqrt)
-  Pb_CP_Pbt_Cond <- input$Pb_CP_Pbt_Cond <- Pb_Cond %*% CP %*% t(Pb_Cond)
-  input$SSb_Cond       <- sum(diag(BtB_sqrt %*% Pb_CP_Pbt_Cond %*% BtB_sqrt))
-  input$r2total.b_Cond <- input$SSb_Cond / input$SStotal
-
-  res_Disc_Cond <- EigenCP(Pb_CP_Pbt_Cond)
-  names(res_Disc_Cond$input) <- "Pb_CP_Pbt_Cond"
-  names(res_Disc_Cond$eig) <- c("Ub_Cond", "Lambdab_vec", "Lambdab", "ProjMatb_Cond",
-                                "tb", "Fb_Cond", "Ctrbb_Cond")
-
-  ############## Project data into its own space...
-
-  res_Disc_Cond$proj2Bary$Fb_Cond <- Pb_Cond %*% CP %*% t(Pb_Cond) %*% res_Disc_Cond$eig$ProjMatb_Cond
-
-  res_Disc_Cond$proj2Bary$Fdisc   <-             CP %*% t(Pb_Cond) %*% res_Disc_Cond$eig$ProjMatb_Cond
-
-
-
-
-
-
-
-
-
-
-  #Test the quality of the predictive model for the sample.
+  # Test quality of predictive model ####
   ###Fixed effects. Predict *old* observations.
 
   Predict_Fixed_Rows <- list()
 
   #Compute d2 from stimulus a(b) to all categories B (to give an a(b)xB matrix)
-  Dev2_ab_2_B <- Dev2(res_Disc_Full$proj2Bary$Fdisc, res_Disc_Full$proj2Bary$Fb_condensed)
+  Dev2_ab_2_B <- Dev2(res_Disc_Full$proj2Bary$Fdisc, res_Disc_Full$proj2Bary$Fb_Cond)
 
   #Assign ab to B (identify which B is closest to each ab)
   Prediction_vec <- input$DESIGN_rows$labels[apply(Dev2_ab_2_B, 1, which.min)]
 
   #Transform the prediction into a design matrix
-  Predict_Fixed_Rows$Prediction_mat <- makeNominalData(as.matrix(Prediction_vec))[,paste0('.',input$DESIGN_rows$labels)]
-  dimnames(Predict_Fixed_Rows$Prediction_mat) <- dimnames(input$DESIGN_rows$mat)
+  Predict_Fixed_Rows$Prediction_mat <- makeNominalData(as.matrix(Prediction_vec))[,paste0('.',DESIGN_rows$labels)]
+  dimnames(Predict_Fixed_Rows$Prediction_mat) <- dimnames(DESIGN_rows$mat)
 
   #Transform the design matrix to give a confusion matrix
-  Predict_Fixed_Rows$Confusion_mat <- t(input$DESIGN_rows$mat) %*% Predict_Fixed_Rows$Prediction_mat
+  Predict_Fixed_Rows$Confusion_mat <- t(DESIGN_rows$mat) %*% Predict_Fixed_Rows$Prediction_mat
   rownames(Predict_Fixed_Rows$Confusion_mat) <- paste0(input$DESIGN_rows$labels, "_actual")
   colnames(Predict_Fixed_Rows$Confusion_mat) <- paste0(input$DESIGN_rows$labels, "_predicted")
 
@@ -153,96 +103,37 @@ DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
 
 
   if(Perm_rows==TRUE){
-
     Perm_Rows <- DiMDS_perm_rows(input = input,
                                  res_Disc_Full = res_Disc_Full,
-                                 res_Disc_Cond = res_Disc_Cond,
                                  niter=Perm_rows_niter)
-
   }#end Perm_rows
-
-
-
-
-
-
-
-
-
-
   if(Boot_rows==TRUE){
-
     Boot_Rows <- DiMDS_boot_rows(input = input,
                                  res_Disc_Full = res_Disc_Full,
                                  niter=Boot_rows_niter)
-
   }#end Boot_rows
-
-
-
-
-
-
-
-
-  #Test the quality of the predictive model for out-of-sample stimuli.
   if(LOO_rows){
-
     LOO_Rows <- DiMDS_LOO_rows(input = input,
                                res_Disc_Full = res_Disc_Full,
-                               res_Disc_Cond = res_Disc_Cond,
-                               DESIGN_rows = input$DESIGN_rows,
+                               DESIGN_rows = DESIGN_rows,
                                multiplier = LOO_rows_multiplier)
-
-    # library(RColorBrewer)
-    #         heatmap(Confusion_rand,
-    #         Rowv = NA, Colv=NA, revC = TRUE,
-    #         col = brewer.pal(9, "PuRd"))
-
   }#end LOO_rows
-
-
-
-
-
-
-
-
-
-
-
-
-
-  #Test the quality of the predictive model for out-of-sample stimuli.
   if(SH_rows){
-
     SH_Rows <- DiMDS_SH_rows(input = input,
                              res_Disc_Full = res_Disc_Full,
                              res_Disc_Cond = res_Disc_Cond,
-                             DESIGN_rows = input$DESIGN_rows,
+                             DESIGN_rows = DESIGN_rows,
                              niter = SH_rows_niter)
-
   }#end SH_rows
-
-
-
-
-
-
-
-
-
-
 
 
 
   returnME <- list(input = input,
                    res_Disc_Full = res_Disc_Full,
-                   res_Disc_Cond = res_Disc_Cond,
                    Predict_Fixed_Rows = Predict_Fixed_Rows)
 
   if(Perm_rows){
-    returnME$Perm_Rows <- Perm_Rows #Permutation test of Row DESIGN vs Null (random) DESIGNs
+    returnME$Perm_Rows <- Perm_Rows #Permutation test of Row DESIGN vs. random DESIGNs
   }
   if(Boot_rows){
     returnME$Boot_Rows <- Boot_Rows #Boostrap resampling to test stability of Categories in Row DESIGN
