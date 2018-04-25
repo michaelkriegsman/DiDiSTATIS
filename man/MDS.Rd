@@ -4,21 +4,19 @@
 \alias{MDS}
 \title{Conduct metric multidimensional scaling}
 \usage{
-MDS(DATA, data_are = NULL, DESIGN, n2k = NULL, main = NULL)
+MDS(DATA, data_are = NULL, DESIGN_rows, n2k = NULL)
 }
 \arguments{
 \item{DATA}{The data}
 
 \item{data_are}{Flag to indicate data type #d, d2, CP}
 
-\item{DESIGN}{List of DESIGN info}
+\item{DESIGN_rows}{List of DESIGN info}
 
 \item{n2k}{Number of components to keep}
-
-\item{main}{Title for Factor Maps}
 }
 \value{
-Factor maps, and a list of computational results
+Results of MDS
 }
 \description{
 Conduct metric multidimensional scaling
