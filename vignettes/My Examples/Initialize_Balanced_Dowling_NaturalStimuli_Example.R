@@ -12,9 +12,12 @@ colnames(MusExp) <- "MusExp"
 
 # drop_these_MidMusExp <- sample(which(DESIGN$tables$MusExp$mat[,2]==1), 7)
 #The results were c(3, 22,  9, 21, 31, 24, 11)
-#Then, noticed that bc033 and bc034 each created 15 categories, and their PFS are unstable and unusual and huge.
-#So, take those out, and bring in 2 other subjects
-drop_these_MidMusExp <- c(9, 21, 31, 24, 11, 33, 34)
+
+# 4.25.2018, I had previously removed subjects 33 and 34, as mentioned below, but these are in the High Experience group, so I need to keep them, and instead I revert my balancing to the previous setup...
+# #Then, noticed that bc033 and bc034 each created 15 categories, and their PFS are unstable and unusual and huge.
+# #So, take those out, and bring in 2 other subjects
+# drop_these_MidMusExp <- c(9, 21, 31, 24, 11, 33, 34)
+drop_these_MidMusExp <- c(3, 22,  9, 21, 31, 24, 11)
 Sort_balanced <- Sort[,-drop_these_MidMusExp]
 
 
