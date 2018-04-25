@@ -30,8 +30,10 @@ EigenCP_Full <- function(CP, DESIGN_rows = DESIGN_rows, n2k=NULL){
   #U_Cond
   res_CP$eig$U_Cond <- DESIGN_rows$Pb_Cond %*% res_CP$eig$U_Full
 
+  # To delete ####
   #U_Cond_Sqrt
-  res_CP$eig$U_Cond_Sqrt <- DESIGN_rows$Pb_Cond_Sqrt %*% res_CP$eig$U_Full
+  # res_CP$eig$U_Cond_Sqrt <- DESIGN_rows$Pb_Cond_Sqrt %*% res_CP$eig$U_Full
+  ####
 
   #Lambda_vec
   res_CP$eig$Lambda_vec <- res$values[indToKeep]
@@ -43,7 +45,9 @@ EigenCP_Full <- function(CP, DESIGN_rows = DESIGN_rows, n2k=NULL){
   #ProjMat_Full
   res_CP$eig$ProjMat_Full <- res_CP$eig$U_Full %*% solve(res_CP$eig$Lambda^(1/2))
   res_CP$eig$ProjMat_Cond <- res_CP$eig$U_Cond %*% solve(res_CP$eig$Lambda^(1/2))
-  res_CP$eig$ProjMat_Cond_Sqrt <- res_CP$eig$U_Cond_Sqrt %*% solve(res_CP$eig$Lambda^(1/2))
+  # To delete ####
+  # res_CP$eig$ProjMat_Cond_Sqrt <- res_CP$eig$U_Cond_Sqrt %*% solve(res_CP$eig$Lambda^(1/2))
+  #
 
   #tau (cumulative percent variance)
   res_CP$eig$t <- 100 * res_CP$eig$Lambda_vec / sum(res_CP$eig$Lambda_vec)
@@ -52,13 +56,15 @@ EigenCP_Full <- function(CP, DESIGN_rows = DESIGN_rows, n2k=NULL){
   #and if sum(F[,1]) < 0, then F[,1] * -1
   # res_CP$eig$F_Full <- FlipCheck(CP %*% res_CP$eig$ProjMat_Full)
   res_CP$eig$F_Full <- CP %*% res_CP$eig$ProjMat_Full
-  
+
   #F_Cond (does't work the 2nd way... when condense columns, need BtB)
   res_CP$eig$F_Cond <- DESIGN_rows$Pb_Cond %*% res_CP$eig$F_Full
   # res_CP$eig$F_Cond <- DESIGN_rows$Pb_Cond %*% CP %*% t(DESIGN_rows$Pb_Cond) %*% res_CP$eig$ProjMat_Cond
-  
+
+  # To delete ####
   # res_CP$eig$F_Cond_Sqrt <- DESIGN_rows$Pb_Cond_Sqrt %*% res_CP$eig$F_Full
-  res_CP$eig$F_Cond_Sqrt <- DESIGN_rows$Pb_Cond %*% CP %*% t(DESIGN_rows$Pb_Cond) %*% res_CP$eig$ProjMat_Cond_Sqrt
+  # res_CP$eig$F_Cond_Sqrt <- DESIGN_rows$Pb_Cond %*% CP %*% t(DESIGN_rows$Pb_Cond) %*% res_CP$eig$ProjMat_Cond_Sqrt
+  #
 
   #Contributions
   res_CP$eig$Ctrb_Full <- (res_CP$eig$F_Full^2) / repmat(t(res_CP$eig$Lambda_vec),nrow(res_CP$eig$U_Full),1)
