@@ -64,14 +64,14 @@ DiMDS_perm_rows <- function(input = NULL,
 
   }
 
-  r2total.b_perm     <- SSb.perm / input$SStotal
+  r2plain.b_perm     <- SSb.perm / input$SSplain
   r2disc_perm.b_perm <- SSb.perm / SSdisc.perm
 
   returnME <- list()
   returnME$permuted_row_order <- permuted_row_order
   returnME$SSb.perm           <- SSb.perm
   returnME$SSdisc.perm        <- SSdisc.perm
-  returnME$r2total.b_perm     <- r2total.b_perm
+  returnME$r2plain.b_perm     <- r2plain.b_perm
   returnME$r2disc_perm.b_perm <- r2disc_perm.b_perm
 
   return(returnME)
