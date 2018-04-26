@@ -5,9 +5,8 @@
 \title{Conduct barycentric discriminant metric multidimensional scaling}
 \usage{
 DiMDS(DATA, data_are, DESIGN_rows, n2k = NULL, Perm_rows = F,
-  Perm_rows_niter = 1000, Boot_rows = F, Boot_rows_niter = 1000,
-  LOO_rows = F, LOO_rows_multiplier = 10, SH_rows = F,
-  SH_rows_niter = 50)
+  Perm_rows_niter = 1000, LOO_rows = F, LOO_rows_multiplier = 10,
+  SH_rows = F, SH_rows_niter = 50)
 }
 \arguments{
 \item{DATA}{A distance-data matrix}
@@ -21,10 +20,6 @@ DiMDS(DATA, data_are, DESIGN_rows, n2k = NULL, Perm_rows = F,
 \item{Perm_rows}{Boolean to conduct permutation test}
 
 \item{Perm_rows_niter}{Number of permutation iterations}
-
-\item{Boot_rows}{Boolean to conduct bootstrap resampling}
-
-\item{Boot_rows_niter}{Number of bootstrap iterations}
 
 \item{LOO_rows}{Boolean to conduct Leave One Out (LOO) cross-validation}
 

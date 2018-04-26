@@ -8,8 +8,8 @@
 #'@param n2k Number of components to keep
 #'@param Perm_rows Boolean to conduct permutation test
 #'@param Perm_rows_niter Number of permutation iterations
-#'@param Boot_rows Boolean to conduct bootstrap resampling
-#'@param Boot_rows_niter Number of bootstrap iterations
+# #'@param Boot_rows Boolean to conduct bootstrap resampling #feature removed 4.25.2018
+# #'@param Boot_rows_niter Number of bootstrap iterations #feature removed 4.25.2018
 #'@param LOO_rows Boolean to conduct Leave One Out (LOO) cross-validation
 #'@param LOO_rows_multiplier Increase the number of LOO iterations
 #'@param SH_rows Boolean to conduct Split Half (SH) cross-validation
@@ -19,7 +19,7 @@
 
 DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
                   Perm_rows = F, Perm_rows_niter = 1000,
-                  Boot_rows = F, Boot_rows_niter = 1000,
+                  # Boot_rows = F, Boot_rows_niter = 1000, #feature removed 4.25.2018
                   LOO_rows = F,  LOO_rows_multiplier = 10,
                   SH_rows = F,   SH_rows_niter = 50){
 
@@ -102,26 +102,24 @@ DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
 
 
 
-  if(Perm_rows==TRUE){
+  if(Perm_rows==TRUE){ # Permute rows ####
     Perm_Rows <- DiMDS_perm_rows(input = input,
                                  res_Disc_Full = res_Disc_Full,
                                  niter=Perm_rows_niter)
   }#end Perm_rows
-  if(Boot_rows==TRUE){
-    Boot_Rows <- DiMDS_boot_rows(input = input,
-                                 res_Disc_Full = res_Disc_Full,
-                                 niter=Boot_rows_niter)
-  }#end Boot_rows
-  if(LOO_rows){
+  # if(Boot_rows==TRUE){ #feature removed 4.25.2018
+  #   Boot_Rows <- DiMDS_boot_rows(input = input,
+  #                                res_Disc_Full = res_Disc_Full,
+  #                                niter=Boot_rows_niter)
+  # }#end Boot_rows
+  if(LOO_rows){ # LOO rows ####
     LOO_Rows <- DiMDS_LOO_rows(input = input,
                                res_Disc_Full = res_Disc_Full,
-                               DESIGN_rows = DESIGN_rows,
                                multiplier = LOO_rows_multiplier)
   }#end LOO_rows
-  if(SH_rows){
+  if(SH_rows){ # SH rows ####
     SH_Rows <- DiMDS_SH_rows(input = input,
                              res_Disc_Full = res_Disc_Full,
-                             res_Disc_Cond = res_Disc_Cond,
                              DESIGN_rows = DESIGN_rows,
                              niter = SH_rows_niter)
   }#end SH_rows
@@ -135,9 +133,9 @@ DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
   if(Perm_rows){
     returnME$Perm_Rows <- Perm_Rows #Permutation test of Row DESIGN vs. random DESIGNs
   }
-  if(Boot_rows){
-    returnME$Boot_Rows <- Boot_Rows #Boostrap resampling to test stability of Categories in Row DESIGN
-  }
+  # if(Boot_rows){ #feature removed 4.25.2018
+  #   returnME$Boot_Rows <- Boot_Rows #Boostrap resampling to test stability of Categories in Row DESIGN
+  # }
   if(LOO_rows){
     returnME$LOO_Rows  <- LOO_Rows #LOO cross-validation to test quality of predictive model
   }

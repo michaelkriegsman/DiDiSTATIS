@@ -16,7 +16,7 @@ load('C:/Users/Michael A. Kriegsman/Google Drive/Dissertation/DiDiSTATIS/DiDiSTA
 source('C:/Users/Michael A. Kriegsman/Box Sync/Dissertation/RStudio2Git/DiDiSTATIS/vignettes/My Examples/Initialize_Balanced_Dowling_NaturalStimuli_Example.R')
 
 #And run MDS!
-res_MDS <- MDS(DATA = S, data_are = 'CP', DESIGN_rows = DESIGN$rows$Comp)
+res_MDS <- MDS(DATA = S, data_are = 'CP', DESIGN_rows = DESIGN$rows$Comp, n2k=NULL)
 
 
 
