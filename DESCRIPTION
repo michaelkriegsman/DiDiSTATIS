@@ -11,7 +11,9 @@ Depends:
     ExPosition,
     prettyGraphs,
     corrplot,
-    viridis
+    viridis,
+    ReporteRs
+    ReporteRsjars
 License: What license is it under?
 Encoding: UTF-8
 LazyData: TRUE

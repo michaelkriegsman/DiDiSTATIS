@@ -66,8 +66,9 @@ DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
   res_Disc_Full$proj2Bary$SSab   <- SS_from_F(res_Disc_Full$proj2Bary$Fab)
   res_Disc_Full$proj2Bary$SSe <- input$SSplain - res_Disc_Full$proj2Bary$SSdisc
 
-  res_Disc_Full$proj2Bary$r2disc.B <- res_Disc_Full$proj2Bary$SSb / res_Disc_Full$proj2Bary$SSdisc
-
+  res_Disc_Full$proj2Bary$r2disc.B     <- res_Disc_Full$proj2Bary$SSb / res_Disc_Full$proj2Bary$SSdisc
+  res_Disc_Full$proj2Bary$r2plain.b    <- input$r2plain.b
+  res_Disc_Full$proj2Bary$r2plain.disc <- res_Disc_Full$proj2Bary$SSdisc / input$SSplain
 
 
 
@@ -95,6 +96,7 @@ DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
   rownames(Predict_Fixed_Rows$Confusion_mat) <- paste0(input$DESIGN_rows$labels, "_actual")
   colnames(Predict_Fixed_Rows$Confusion_mat) <- paste0(input$DESIGN_rows$labels, "_predicted")
 
+  Predict_Fixed_Rows$Confusion_mat_norm <- round(Prediction_Fixed_Rows$Confusion_mat / rowSums(Prediction_Fixed_Rows$Confusion_mat), 2)
 
 
 
