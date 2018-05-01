@@ -66,6 +66,7 @@ DiMDS_perm_rows <- function(input = NULL,
 
   r2plain.b_perm     <- SSb.perm / input$SSplain
   r2disc_perm.b_perm <- SSb.perm / SSdisc.perm
+  r2plain.disc_perm  <- SSdisc.perm / input$SSplain
 
   returnME <- list()
   returnME$permuted_row_order <- permuted_row_order
@@ -73,6 +74,7 @@ DiMDS_perm_rows <- function(input = NULL,
   returnME$SSdisc.perm        <- SSdisc.perm
   returnME$r2plain.b_perm     <- r2plain.b_perm
   returnME$r2disc_perm.b_perm <- r2disc_perm.b_perm
+  returnME$r2plain.disc_perm  <- r2plain.disc_perm
 
   return(returnME)
 
