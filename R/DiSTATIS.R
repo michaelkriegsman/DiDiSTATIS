@@ -2,38 +2,34 @@
 #
 #'Conduct DiSTATIS
 #'
-#'@param D2_array An array of squared distance matrices
-# #'@param data_are Flag to indicate data type #d, d2, CP, or X_to_cos, X_to_cov, X_to_cor
-#'@param DESIGN_tables DESIGN matrix for the tables
+#'@param DATA The data
+#'@param data_are Flag to indicate data type #sort, d_array, d2_array, CP_array
+#'@param DESIGN_rows List of DESIGN info for rows
+#'@param DESIGN_tables List of DESIGN info for tables
 #'@param n2k Number (of components) to keep
-#'@param main Title for Factor Maps
-#'@return Factor maps, and a list of computational results
+#'@return A list of computational results
 #'@export
 
-DiSTATIS <- function(D2_array, DESIGN_tables, n2k=NULL, main = NULL){
+DiSTATIS <- function(DATA, data_are, DESIGN_rows, DESIGN_tables, n2k=NULL){
 
   #Convert data to CP
-  ## CP_array <- apply(D_array, c(1,2), GetCP, data_are='d2')
-  # would need to make it loop through tables of D_array...
-  # for now, data_are must == 'd2'. Thus the name, D2_array
-  CP_array <- Dist2CP(D2_array)
+  CP_array <- GetCP_array(DATA, data_are)
 
-  ##Step 1: Identify individual and group table weights
-  #Get group and grand compromise.
-  #MFA:        GetConsensus()
-  #HMFA:       GetGrandConsensus()
-  #DiSTATIS:   GetCompromise()
-  #HiDiSTATIS: GetGrandCompromise()
-
-  DiSTATIS_collapsed <- GetCompromise(CP_array, DESIGN_tables)
+  ##Step 1: Identify table weights
+  DiSTATIS_collapsed <- GetCompromise(CP_array, DESIGN_rows, DESIGN_tables)
 
   ##Step 2: Decompose the Grand Compromise
-  res_DiSTATIS <- EigenDiSTATIS(DiSTATIS_collapsed, DESIGN, n2k=n2k)
-  #res <- 
-  
-  #Use that output to plot Factor Maps
-  PlotDiSTATIS(res_DiSTATIS, axes=c(1,2), main = main)
+  res_DiSTATIS <- EigenDiSTATIS(DiSTATIS_collapsed, DESIGN_rows, DESIGN_tables, n2k=n2k)
 
-  return(res_DiSTATIS)
+  input <- list(DATA = DATA,
+                data_are = data_are,
+                DESIGN_rows = DESIGN_rows,
+                DESIGN_tables = DESIGN_tables)
+
+  returnME <- list(input = input,
+                   DiSTATIS_collapsed = DiSTATIS_collapsed,
+                   res_DiSTATIS = res_DiSTATIS)
+
+  return(returnME)
 
 }

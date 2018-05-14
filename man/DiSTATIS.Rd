@@ -4,19 +4,21 @@
 \alias{DiSTATIS}
 \title{Conduct DiSTATIS}
 \usage{
-DiSTATIS(D2_array, DESIGN_tables, n2k = NULL, main = NULL)
+DiSTATIS(DATA, data_are, DESIGN_rows, DESIGN_tables, n2k = NULL)
 }
 \arguments{
-\item{D2_array}{An array of squared distance matrices}
+\item{DATA}{The data}
 
-\item{DESIGN_tables}{DESIGN matrix for the tables}
+\item{data_are}{Flag to indicate data type #sort, d_array, d2_array, CP_array}
+
+\item{DESIGN_rows}{List of DESIGN info for rows}
+
+\item{DESIGN_tables}{List of DESIGN info for tables}
 
 \item{n2k}{Number (of components) to keep}
-
-\item{main}{Title for Factor Maps}
 }
 \value{
-Factor maps, and a list of computational results
+A list of computational results
 }
 \description{
 Conduct DiSTATIS
