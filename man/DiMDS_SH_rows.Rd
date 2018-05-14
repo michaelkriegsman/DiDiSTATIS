@@ -4,19 +4,14 @@
 \alias{DiMDS_SH_rows}
 \title{Split Half cross-validation for the rows for DiMDS}
 \usage{
-DiMDS_SH_rows(input = NULL, res_Disc_Full = NULL, res_Disc_Cond = NULL,
-  DESIGN_rows = NULL, niter = 1)
+DiMDS_SH_rows(input = NULL, res_Disc_Full = NULL, niter = 1)
 }
 \arguments{
 \item{input}{Items input to DiMDS}
 
 \item{res_Disc_Full}{Output from decomposing the barycentric discriminant sub-space}
 
-\item{res_Disc_Cond}{Output from decomposing the barycentric discriminant sub-space}
-
-\item{DESIGN_rows}{DESIGN matrix for the rows}
-
-\item{multiplier}{to increase the number of iterations}
+\item{niter}{The number of iterations}
 }
 \value{
 Prediction_Random

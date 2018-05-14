@@ -119,11 +119,13 @@ if(is.list(res_DiMDS$SH_Rows)){
   #+++++++++++++++++++++++
   doc <- addSlide(doc, Slide_type)
   doc <- addTitle(doc, "Confusion SH")
-  plot_Confusion_SH <- function(){ PlotConfusion(Confusion_mat = res_DiMDS$SH_Rows$Confusion_rand_norm / 100) }
+  plot_Confusion_SH <- function(){
+    PlotConfusion(Confusion_mat = res_DiMDS$SH_Rows$Confusion_rand_norm, is.percent = TRUE)
+    }
   doc <- addPlot(doc, plot_Confusion_SH, vector.graphic = TRUE)
 }
 
-pptFileName <- paste0("DiMDS Results ", Sys.Date(), round(runif(1),10), ".pptx")
+pptFileName <- paste0(Sys.Date(), " DiMDS Results ", round(runif(1),10), ".pptx")
 writeDoc(doc, paste0("C:/Users/Michael A. Kriegsman/Box Sync/Dissertation/LaTeX/Figures/DiMDS/", pptFileName) )
 
 

@@ -96,7 +96,7 @@ DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
   rownames(Predict_Fixed_Rows$Confusion_mat) <- paste0(input$DESIGN_rows$labels, "_actual")
   colnames(Predict_Fixed_Rows$Confusion_mat) <- paste0(input$DESIGN_rows$labels, "_predicted")
 
-  Predict_Fixed_Rows$Confusion_mat_norm <- round(Prediction_Fixed_Rows$Confusion_mat / rowSums(Prediction_Fixed_Rows$Confusion_mat), 2)
+  Predict_Fixed_Rows$Confusion_mat_norm <- round(Predict_Fixed_Rows$Confusion_mat / rowSums(Predict_Fixed_Rows$Confusion_mat), 2)
 
 
 
@@ -122,7 +122,6 @@ DiMDS <- function(DATA, data_are, DESIGN_rows, n2k=NULL,
   if(SH_rows){ # SH rows ####
     SH_Rows <- DiMDS_SH_rows(input = input,
                              res_Disc_Full = res_Disc_Full,
-                             DESIGN_rows = DESIGN_rows,
                              niter = SH_rows_niter)
   }#end SH_rows
 
