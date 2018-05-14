@@ -1,17 +1,15 @@
 # GetConsensus.R
-#Part of the MFA function within DiDiSTATIS
+# Part of the MFA function within DiDiSTATIS
 #
 #'Collapse tables for MFA
 #'
-#'@param D2_array A array of squared distance matrices
-#'@param data_are Flag to indicate data type #d, d2, CP, or X_to_cos, X_to_cov, X_to_cor
-#'@param DESIGN_tables Column vector(s) to color tables (nominal or colors or DESIGN)
-#'@param n2k Number of components to keep
-#'@param main Title for Factor Maps
-#'@return Factor maps, and a list of computational results
+#'@param CP_array A array of cross-product matrices
+#'@param DESIGN_rows List of DESIGN info for rows
+#'@param DESIGN_tables List of DESIGN info for tables
+#'@return A list of compromises and other computed objects
 #'@export
 
-GetConsensus <- function(CP_array, DESIGN_tables){
+GetConsensus <- function(CP_array, DESIGN_rows, DESIGN_tables){
 
   MFA_collapsed <- list()
   MFA_collapsed$data$CP_array <- CP_array
@@ -19,7 +17,7 @@ GetConsensus <- function(CP_array, DESIGN_tables){
   ###########################
   ## 1. Get Compromise
   #  1a. dilate1, a scalar, the total number of people/tables, "K"
-  dilate1 <- nrow(DESIGN_tables)
+  dilate1 <- nrow(DESIGN_tables$mat)
   MFA_collapsed$coef$dilate1 <- dilate1
 
   #  1b. MFA1, a vector of length "K", that gives the MFA coefficient of each of the K tables
@@ -41,10 +39,10 @@ GetConsensus <- function(CP_array, DESIGN_tables){
 
   ######
   #  3a. OverWeighted_CP_array
-  OverWeighted_CP_array <- array(NA, dim=c(A, A, K))
+  OverWeighted_CP_array <- array(NA, dim=c(DESIGN_rows$AB, DESIGN_rows$AB, DESIGN_tables$CD))
 
-  for(k in 1:K){
-    this_table <- k
+  for(cd in 1:DESIGN_tables$CD){
+    this_table <- cd
     OverWeighted_CP_array[,,this_table] <- (CP_array[,,this_table] *
                                               dilate1 *
                                               MFA1[this_table])

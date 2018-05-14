@@ -2,37 +2,34 @@
 #
 #'Conduct MFA (specifically for squared distance matrices)
 #'
-#'@param D2_array An array of squared distance matrices
-# #'@param data_are Flag to indicate data type #d, d2, CP, or X_to_cos, X_to_cov, X_to_cor
-#'@param DESIGN_tables DESIGN matrix for the tables
+#'@param DATA The data
+#'@param data_are Flag to indicate data type #sort, d_array, d2_array, CP_array
+#'@param DESIGN_rows List of DESIGN info for rows
+#'@param DESIGN_tables List of DESIGN info for tables
 #'@param n2k Number (of components) to keep
-#'@param main Title for Factor Maps
-#'@return Factor maps, and a list of computational results
+#'@return A list of computational results
 #'@export
 
-MFA <- function(D2_array, DESIGN_tables, n2k=NULL, main = NULL){
+MFA <- function(DATA, data_are, DESIGN_rows, DESIGN_tables, n2k=NULL){
 
   #Convert data to CP
-  ## CP_array <- apply(D_array, c(1,2), GetCP, data_are='d2')
-  # would need to make it loop through tables of D_array...
-  # for now, data_are must == 'd2'. Thus the name, D2_array
-  CP_array <- Dist2CP(D2_array)
+  CP_array <- GetCP_array(DATA, data_are)
 
-  ##Step 1: Identify individual and group table weights
-  #Get group and grand compromise.
-  #MFA:        GetConsensus()
-  #HMFA:       GetGrandConsensus()
-  #DiSTATIS:   GetCompromise()
-  #HiDiSTATIS: GetGrandCompromise()
+  ##Step 1: Identify table weights and compute Compromise, here called Consensus
+  MFA_collapsed <- GetConsensus(CP_array, DESIGN_rows, DESIGN_tables)
 
-  MFA_collapsed <- GetConsensus(CP_array, DESIGN_tables)
+  ##Step 2: Decompose the Consensus
+  res_MFA <- EigenMFA(MFA_collapsed, DESIGN_rows, DESIGN_tables, n2k=n2k)
 
-  ##Step 2: Decompose the Grand Compromise
-  res_MFA <- EigenMFA(MFA_collapsed, DESIGN, n2k=n2k)
+  input <- list(DATA = DATA,
+                data_are = data_are,
+                DESIGN_rows = DESIGN_rows,
+                DESIGN_tables = DESIGN_tables)
 
-  #Use that output to plot Factor Maps
-  PlotMFA(res_MFA, axes=c(1,2), main = main)
+  returnME <- list(input = input,
+                   MFA_collapsed = MFA_collapsed,
+                   res_MFA = res_MFA)
 
-  return(res_MFA)
+  return(returnME)
 
 }

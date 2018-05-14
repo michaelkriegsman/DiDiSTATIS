@@ -4,21 +4,17 @@
 \alias{GetConsensus}
 \title{Collapse tables for MFA}
 \usage{
-GetConsensus(CP_array, DESIGN_tables)
+GetConsensus(CP_array, DESIGN_rows, DESIGN_tables)
 }
 \arguments{
-\item{DESIGN_tables}{Column vector(s) to color tables (nominal or colors or DESIGN)}
+\item{CP_array}{A array of cross-product matrices}
 
-\item{D2_array}{A array of squared distance matrices}
+\item{DESIGN_rows}{List of DESIGN info for rows}
 
-\item{data_are}{Flag to indicate data type #d, d2, CP, or X_to_cos, X_to_cov, X_to_cor}
-
-\item{n2k}{Number of components to keep}
-
-\item{main}{Title for Factor Maps}
+\item{DESIGN_tables}{List of DESIGN info for tables}
 }
 \value{
-Factor maps, and a list of computational results
+A list of compromises and other computed objects
 }
 \description{
 Collapse tables for MFA

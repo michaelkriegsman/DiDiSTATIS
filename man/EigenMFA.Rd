@@ -4,12 +4,14 @@
 \alias{EigenMFA}
 \title{Eigen-decompose the Consensus, and then compute everything else}
 \usage{
-EigenMFA(MFA_collapsed, DESIGN = NULL, n2k = NULL)
+EigenMFA(MFA_collapsed, DESIGN_rows = NULL, DESIGN_tables, n2k = NULL)
 }
 \arguments{
 \item{MFA_collapsed}{All output related to individuals and Consensus}
 
-\item{DESIGN}{The file structure related to the (table, and if applicable, row) DESIGN}
+\item{DESIGN_rows}{List of DESIGN info for rows}
+
+\item{DESIGN_tables}{List of DESIGN info for tables}
 
 \item{n2k}{Number of components 2 keep}
 }

@@ -12,7 +12,7 @@ Depends:
     prettyGraphs,
     corrplot,
     viridis,
-    ReporteRs
+    ReporteRs,
     ReporteRsjars
 License: What license is it under?
 Encoding: UTF-8
