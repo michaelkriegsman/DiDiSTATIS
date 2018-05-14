@@ -2,15 +2,13 @@
 #
 #'Collapse tables for HMFA
 #'
-#'@param D2_array A array of squared distance matrices
-#'@param data_are Flag to indicate data type #d, d2, CP, or X_to_cos, X_to_cov, X_to_cor
-#'@param DESIGN_tables Column vector(s) to discriminate tables (nominal or colors or DESIGN)
-#'@param n2k Number of components to keep
-#'@param main Title for Factor Maps
-#'@return Factor maps, and a list of computational results
+#'@param CP_array A array of cross-product matrices
+#'@param DESIGN_rows List of DESIGN info for rows
+#'@param DESIGN_tables List of DESIGN info for tables
+#'@return A list of compromises and other computed objects
 #'@export
 
-GetGrandConsensus <- function(CP_array, DESIGN_tables){
+GetGrandConsensus <- function(CP_array, DESIGN_rows, DESIGN_tables){
 
   HMFA_collapsed <- list()
   HMFA_collapsed$data$CP_array <- CP_array
@@ -18,7 +16,7 @@ GetGrandConsensus <- function(CP_array, DESIGN_tables){
   ###########################
   ## 1. Get Group Consensuses
   #  1a. dilate1, a vector of length "D", that gives the number of people in each group, "C(d)"
-  dilate1 <- colSums(DESIGN_tables)
+  dilate1 <- colSums(DESIGN_tables$mat)
   HMFA_collapsed$coef$dilate1 <- dilate1
 
   #  1b. MFA1, a vector of length "CD", that gives the MFA coefficient of each of the CD tables (this is 1 for each participant)
@@ -30,13 +28,13 @@ GetGrandConsensus <- function(CP_array, DESIGN_tables){
 
   # Compute GroupConsensus_array[,,<d>])
 
-  HMFA_collapsed$data$GroupConsensus_array <- array(NA, dim=c(A,A,D))
+  HMFA_collapsed$data$GroupConsensus_array <- array(NA, dim=c(DESIGN_rows$AB,DESIGN_rows$AB,DESIGN_tables$D))
 
   #For each of the D groups...
-  for(d in 1:D){
+  for(d in 1:DESIGN_tables$D){
 
     #designate the relevant tables
-    these_tables <- c(which(DESIGN_tables[,d]==1))
+    these_tables <- c(which(DESIGN_tables$mat[,d]==1))
 
     ##Compute each GroupConsensus (depends on ComputeSplus.R)
     #use alpha_C_in_D<d> to compute Consensus_Plus_in_d<d>
@@ -52,7 +50,7 @@ GetGrandConsensus <- function(CP_array, DESIGN_tables){
   ###########################
   ## 2. Get Grand Consensus
   #  2a. dilate2, a scalar, the number of groups, "D".
-  dilate2 <- D
+  dilate2 <- DESIGN_tables$D
   HMFA_collapsed$coef$dilate2 <- dilate2
 
   #  2b. MFA2, a vector of length "D", that gives the MFA coefficient of each of the D GroupConsensuses
@@ -72,12 +70,12 @@ GetGrandConsensus <- function(CP_array, DESIGN_tables){
 
   ######
   #  3a. OverWeighted_CP_array
-  OverWeighted_CP_array <- array(NA, dim=c(A, A, CD))
+  OverWeighted_CP_array <- array(NA, dim=c(DESIGN_rows$AB, DESIGN_rows$AB, DESIGN_tables$CD))
 
-  for(d in 1:D){
-    for(c in 1:colSums(DESIGN_tables)[d]){
+  for(d in 1:DESIGN_tables$D){
+    for(c in 1:colSums(DESIGN_tables$mat)[d]){
 
-      this_table <- which(DESIGN_tables[,d]==1)[c]
+      this_table <- which(DESIGN_tables$mat[,d]==1)[c]
       OverWeighted_CP_array[,,this_table] <- (CP_array[,,this_table] *
                                                 dilate1[d] *
                                                 MFA1[this_table] *
@@ -93,9 +91,9 @@ GetGrandConsensus <- function(CP_array, DESIGN_tables){
 
   #####
   # 3b. OverWeighted_GroupConsensus_array
-  OverWeighted_GroupConsensus_array <- array(NA, dim=c(A, A, D))
+  OverWeighted_GroupConsensus_array <- array(NA, dim=c(DESIGN_rows$AB, DESIGN_rows$AB, DESIGN_tables$D))
 
-  for(d in 1:D){
+  for(d in 1:DESIGN_tables$D){
 
     OverWeighted_GroupConsensus_array[,,d] <- (HMFA_collapsed$data$GroupConsensus_array[,,d] *
                                                   dilate2 *
@@ -106,22 +104,6 @@ GetGrandConsensus <- function(CP_array, DESIGN_tables){
   HMFA_collapsed$data$OverWeighted_GroupConsensus_array <- OverWeighted_GroupConsensus_array
 
 
-
-
-  ### RETURNS ###
-  #Part I
-  # HMFA_collapsed$data$CP_array
-  # HMFA_collapsed$coef$dilate1
-  # HMFA_collapsed$coef$MFA1
-  # HMFA_collapsed$data$NormedCP_array
-  # HMFA_collapsed$data$GroupConsensus_array
-  #Part II
-  # HMFA_collapsed$coef$dilate2
-  # HMFA_collapsed$coef$MFA2
-  # HMFA_collapsed$data$GrandConsensus
-  #OverWeight
-  # HMFA_collapsed$data$OverWeighted_CP_array
-  # HMFA_collapsed$data$OverWeighted_GroupConsensus_array
 
   return(HMFA_collapsed)
 }
