@@ -4,12 +4,17 @@
 \alias{Initialize_DESIGNs}
 \title{Create Row and Table DESIGN objects}
 \usage{
-Initialize_DESIGNs(DESIGN_rows_mat = NULL, DESIGN_tables_mat = NULL)
+Initialize_DESIGNs(DESIGN_rows_mat = NULL, colors_B = NULL,
+  DESIGN_tables_mat = NULL, colors_D = NULL)
 }
 \arguments{
 \item{DESIGN_rows_mat}{DESIGN matrix for rows (stimuli)}
 
+\item{colors_B}{Colors of row categories}
+
 \item{DESIGN_tables_mat}{DESIGN matrix for tables (participants)}
+
+\item{colors_D}{Colors of table groups}
 }
 \description{
 Create Row and Table DESIGN objects
