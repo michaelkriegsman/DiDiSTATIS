@@ -21,17 +21,16 @@ DiDiSTATIS_perm_omni_sort <- function(input = NULL,
 
   ###Initialize objects
   RETURN_omni <- list()
-  RETURN_omni$Plain$SS_plain_fromTrace.perm          <- array(NA, dim=c(1, niter))
-  RETURN_omni$r2$Plain_disc.perm                     <- array(NA, dim=c(1, niter))
-  RETURN_omni$r2$disc_B.perm                         <- array(NA, dim=c(1, niter))
-  RETURN_omni$Proj_B.D$sum_SS_B.D_FromF.perm         <- array(NA, dim=c(1, niter))
-  RETURN_omni$Proj_disc.cd$sum_SS_disc.cd_FromF.perm <- array(NA, dim=c(1, niter))
-  RETURN_omni$r2$disc.cd_B.D.perm                    <- array(NA, dim=c(1, niter))
-  # RETURN_omni$Dev2$SS_Dev2_Fb.._Fb.d.perm            <- array(NA, dim=c(niter, ncol(res_BaryGrand$Dev2$SS_Dev2_Fb.._Fb.d)))
-  # RETURN_omni$Dev2$r2_Fb.._Fb.d.perm                 <- array(NA, dim=c(niter, ncol(res_BaryGrand$Dev2$r2_Fb.._Fb.d)))
-
-  RETURN_omni$r2$disc.D_B.D.perm                     <- array(NA, dim=c(input$DESIGN_tables$D, niter))
-  RETURN_omni$r2$plain.D_B.D.perm                    <- array(NA, dim=c(input$DESIGN_tables$D, niter))
+  RETURN_omni$SS_.b..           <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$SS_.b.D           <- array(NA, dim=c(input$DESIGN_tables$D, niter), dimnames = list(input$DESIGN_tables$labels, paste0("iter", 1:niter)))
+  RETURN_omni$SS_ab.D           <- array(NA, dim=c(input$DESIGN_tables$D, niter), dimnames = list(input$DESIGN_tables$labels, paste0("iter", 1:niter)))
+  RETURN_omni$SS_plain..        <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$SS_b_BETWEEN      <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$SS_b_WITHIN       <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_Categories     <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_Groups         <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_BD_ABCD        <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_Plain_Disc_..  <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
 
 
 
@@ -58,37 +57,16 @@ DiDiSTATIS_perm_omni_sort <- function(input = NULL,
                                       DESIGN_tables = input$DESIGN_tables)
 
 
-    #See how the plain changes over perm iterations
-    RETURN_omni$Plain$SS_plain_fromTrace.perm[,i] <- res_DiDiSTATIS_omni$res_BaryGrand$Plain$SS_plain_fromTrace
-
-    #Whats the ratio of the DISC space (all stimuli, from barygrand perspective) to the Plain
-    RETURN_omni$r2$Plain_disc.perm[,i] <- res_DiDiSTATIS_omni$res_BaryGrand$r2$Plain_disc
-
-    #The sum_SS_B.D is the sum of the between-category effect and the between-group effect
-    #So this is a test of the omnibus
-    RETURN_omni$Proj_disc.cd$sum_SS_disc.cd_FromF.perm[,i] <- res_DiDiSTATIS_omni$res_BaryGrand$Proj_disc.cd$sum_SS_disc.cd_FromF
-    RETURN_omni$Proj_B.D$sum_SS_B.D_FromF.perm[,i] <- res_DiDiSTATIS_omni$res_BaryGrand$Proj_B.D$sum_SS_B.D_FromF
-
-    RETURN_omni$r2$disc.cd_B.D.perm[,i] <- RETURN_omni$Proj_B.D$sum_SS_B.D_FromF.perm[,i] / RETURN_omni$Proj_disc.cd$sum_SS_disc.cd_FromF.perm[,i]
-
-    RETURN_omni$r2$disc.D_B.D.perm[,i]  <- res_DiDiSTATIS_omni$res_BaryGrand$Proj_B.D$SS_B.D_FromF / res_DiDiSTATIS_omni$res_BaryGrand$Proj_disc.D$SS_disc.D_FromF
-    RETURN_omni$r2$plain.D_B.D.perm[,i] <- RETURN_omni$Proj_B.D$sum_SS_B.D_FromF.perm[,i] / RETURN_omni$Proj_disc.cd$sum_SS_disc.cd_FromF.perm[,i]
-
-
-    # #Test the omnibus on the row effect
-    # #SSb.. / SSdisc..
-    # #SSb.. / (SSb.. + SSab..)
-    # RETURN_omni$r2$disc_B.perm[,i] <- res_DiDiSTATIS_omni$res_BaryGrand$r2$disc_B
-    # res_DiDiSTATIS_omni$res_BaryGrand$Proj_disc.cd$sum_SS_disc.cd_FromF
-    # #Test the omnibus on the table effect
-    # #sum(Dev2(Fb.., Fb.d)) = the variability of the groups around the stimulus categories.
-    # #So, this looks like an "error"... variability around a point.
-    # #But, it is the signal for the group effect.
-    # #Quantifies the variability of the groups around their mean.
-    # res_DiDiSTATIS_omni$res_BaryGrand$Dev2$SS_Dev2_Fb.._Fb.d
-    # res_DiDiSTATIS_omni$res_BaryGrand$Dev2$r2_Fb.._Fb.d
-    #
-    # res_DiDiSTATIS_omni$res_BaryGrand$Dev2$r2_Fb.._Fb.d - mean(res_DiDiSTATIS_omni$res_BaryGrand$Dev2$r2_Fb.._Fb.d)
+    RETURN_omni$SS_.b..[i]          <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$SS_.b..
+    RETURN_omni$SS_.b.D[,i]         <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$SS_.b.D
+    RETURN_omni$SS_ab.D[,i]         <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$SS_ab.D
+    RETURN_omni$SS_plain..[i]       <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$SS_plain..
+    RETURN_omni$SS_b_BETWEEN[i]     <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$SS_b_BETWEEN
+    RETURN_omni$SS_b_WITHIN[i]      <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$SS_b_WITHIN
+    RETURN_omni$r2_Categories[i]    <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Categories
+    RETURN_omni$r2_Groups[i]        <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Groups
+    RETURN_omni$r2_BD_ABCD[i]       <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_BD_ABCD
+    RETURN_omni$r2_Plain_Disc_..[i] <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_Disc_..
 
   }
 

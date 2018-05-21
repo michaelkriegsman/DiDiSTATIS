@@ -202,9 +202,13 @@ DiDiSTATIS_LOO_rows <- function(input, Hierarchy_of_tables, res_BaryGrand, multi
 
   Prediction_array_D_sum <- apply(Prediction_array_D, c(1,2,3), sum)
   Confusion_rand_D      <- array(0, dim=c(DESIGN_rows_LeftIn$AB_out, DESIGN_rows$B, DESIGN_tables$D))
-  rownames(Confusion_rand_D) <- paste0(DESIGN_rows$labels, "_actual")
+  dimnames(Confusion_rand_D) <- list(paste0(DESIGN_rows$labels, "_actual"),
+                                     paste0(DESIGN_rows$labels, "_predicted"),
+                                     DESIGN_tables$labels)
   Confusion_rand_D_norm <- array(0, dim=c(DESIGN_rows_LeftIn$AB_out, DESIGN_rows$B, DESIGN_tables$D))
-  rownames(Confusion_rand_D_norm) <- paste0(DESIGN_rows$labels, "_actual")
+  dimnames(Confusion_rand_D_norm) <- list(paste0(DESIGN_rows$labels, "_actual"),
+                                          paste0(DESIGN_rows$labels, "_predicted"),
+                                          DESIGN_tables$labels)
 
   for(d in 1:DESIGN_tables$D){
     Confusion_rand_D[,,d]    <- t(DESIGN_rows$mat) %*% Prediction_array_D_sum[,,d]
