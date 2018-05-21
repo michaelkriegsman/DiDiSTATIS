@@ -37,6 +37,7 @@ HiDiSTATIS_perm_tables <- function(input = NULL,
   Dev2_Fab.d.perm_2_Fab.perm <- array(NA, dim=c(nrow(input$CP_array), input$DESIGN_tables$D, niter))
   dimnames(Dev2_Fab.d.perm_2_Fab.perm) <- list(rownames(input$CP_array), input$DESIGN_tables$labels, paste0("iter ", 1:niter))
 
+  r2_Groups_perm <- matrix(NA, niter, 1)
 
 
   #One iteration at a time
@@ -64,6 +65,7 @@ HiDiSTATIS_perm_tables <- function(input = NULL,
       Dev2_Fab.d.perm_2_Fab.perm[,d,i] <- diag(Dev2(res_GrandComp.perm$ProjGroup$F[,,d], res_GrandComp.perm$eig$F))
     }
 
+    r2_Groups_perm[i] <- res_GrandComp.perm$EffectSize$r2_Groups
   }
 
   #Aggregate (sum) the Dev2 over stimuli (for histograms)
@@ -72,7 +74,8 @@ HiDiSTATIS_perm_tables <- function(input = NULL,
   #Average the Dev2 over the groups (for visualizing average distance from each stimulus)
   Avg_Dev2_Fab.d.perm_2_Fab.perm <- apply(Dev2_Fab.d.perm_2_Fab.perm, c(1,3), mean)
 
-  return(list(Dev2_Fab.d_2_Fab = Dev2_Fab.d_2_Fab,
+  return(list(r2_Groups_perm = r2_Groups_perm,
+              Dev2_Fab.d_2_Fab = Dev2_Fab.d_2_Fab,
               Dev2_F.d_2_F     = Dev2_F.d_2_F,
               Dev2_Fab.d.perm_2_Fab.perm = Dev2_Fab.d.perm_2_Fab.perm,
               Dev2_F.d.perm_2_F.perm     = Dev2_F.d.perm_2_F.perm,
