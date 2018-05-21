@@ -29,6 +29,7 @@ EigenDiDiSTATIS <- function(Hierarchy_of_tables, DESIGN_rows, DESIGN_tables, n2k
 
 
 
+
   #Project Barycentric Group Compromises
   res_BaryGrand$Proj_B.D$F_B.D      <- array(NA, dim=c(dim(res_BaryGrand$eig$Fb..), DESIGN_tables$D))
   res_BaryGrand$Proj_B.D$F_B.D_Cond <- array(NA, dim=c(dim(res_BaryGrand$eig$Fb..Cond), DESIGN_tables$D))
@@ -70,7 +71,6 @@ EigenDiDiSTATIS <- function(Hierarchy_of_tables, DESIGN_rows, DESIGN_tables, n2k
 
 
 
-
   #Project OverWeighted GrandCompromose
   res_BaryGrand$Proj_disc..$F_disc.. <- array(NA, dim=c(dim(res_BaryGrand$eig$ProjMatb..), 1))
   res_BaryGrand$Proj_disc..$F_disc..Cond <- array(NA, dim=c(DESIGN_rows$B, ncol(res_BaryGrand$eig$ProjMatb..), 1))
@@ -83,7 +83,6 @@ EigenDiDiSTATIS <- function(Hierarchy_of_tables, DESIGN_rows, DESIGN_tables, n2k
   res_BaryGrand$Proj_disc..$SS_disc.._fromTrace   <- sum(diag(Hierarchy_of_tables$data$OverWeighted_GrandCompromise)) * DESIGN_tables$CD
   res_BaryGrand$Proj_disc..$SS_disc.._fromF       <- SS_from_F(res_BaryGrand$Proj_disc..$F_disc..) * DESIGN_tables$CD
   # }
-
 
 
 
@@ -108,7 +107,6 @@ EigenDiDiSTATIS <- function(Hierarchy_of_tables, DESIGN_rows, DESIGN_tables, n2k
   }
   res_BaryGrand$Proj_disc.D$sum_SS_disc.D_FromTrace <- sum(res_BaryGrand$Proj_disc.D$SS_disc.D_FromTrace)
   res_BaryGrand$Proj_disc.D$sum_SS_disc.D_FromF     <- sum(res_BaryGrand$Proj_disc.D$SS_disc.D_FromF)
-
 
 
 
@@ -150,10 +148,36 @@ EigenDiDiSTATIS <- function(Hierarchy_of_tables, DESIGN_rows, DESIGN_tables, n2k
     res_BaryGrand$Plain$SS_plain.d_fromTrace[d] <- sum(diag(Hierarchy_of_tables$data$OverWeighted_GroupCompromise_array[,,d])) * colSums(DESIGN_tables$mat)[d]
   }
 
+  res_BaryGrand$Plain$SS_plain.cd_fromTrace <- matrix(NA, DESIGN_tables$CD, 1)
+  for(cd in 1:DESIGN_tables$CD){
+    #Need to scale by C(d) to include the number of participants behind each data point
+    res_BaryGrand$Plain$SS_plain.cd_fromTrace[cd] <- sum(diag(Hierarchy_of_tables$data$OverWeighted_CP_array[,,cd]))
+  }
 
-  # res_BaryGrand$r2$Plain_B    <- res_BaryGrand$eig$SS_B.._fromTrace / res_BaryGrand$Plain$SS_plain_fromTrace
-  res_BaryGrand$r2$Plain_disc  <- res_BaryGrand$Proj_disc..$SS_disc.._fromF / res_BaryGrand$Proj_disc..$SS_disc.._fromTrace
-  res_BaryGrand$r2$disc_B      <- res_BaryGrand$eig$SS_B.._fromF / res_BaryGrand$Proj_disc..$SS_disc.._fromF
+
+  #Gather effect sizes into one place.
+  #note that the capitalized indices give the number of effects within each (.. is a scalar; .D contains D values; CD contains CD values)
+  res_BaryGrand$EffectSize$SS_.b.. <- SS_from_F(res_BaryGrand$eig$Fb..) * DESIGN_tables$CD
+  res_BaryGrand$EffectSize$SS_.b.D <- res_BaryGrand$Proj_B.D$SS_B.D_FromF
+  res_BaryGrand$EffectSize$SS_.bCD <- res_BaryGrand$Proj_B.cd$SS_B.cd_fromF
+  res_BaryGrand$EffectSize$SS_ab.. <- res_BaryGrand$Proj_disc..$SS_disc.._fromF
+  res_BaryGrand$EffectSize$SS_ab.D <- res_BaryGrand$Proj_disc.D$SS_disc.D_FromF
+  res_BaryGrand$EffectSize$SS_abCD <- res_BaryGrand$Proj_disc.cd$SS_disc.cd_FromF
+  res_BaryGrand$EffectSize$SS_plain.. <- res_BaryGrand$Plain$SS_plain_fromTrace
+  res_BaryGrand$EffectSize$SS_plain.D <- res_BaryGrand$Plain$SS_plain.d_fromTrace
+  res_BaryGrand$EffectSize$SS_plainCD <- res_BaryGrand$Plain$SS_plain.cd_fromTrace
+  res_BaryGrand$EffectSize$SS_b_BETWEEN <- sum(res_BaryGrand$EffectSize$SS_.b.D) -     res_BaryGrand$EffectSize$SS_.b..
+  res_BaryGrand$EffectSize$SS_b_WITHIN  <- sum(res_BaryGrand$EffectSize$SS_.bCD) - sum(res_BaryGrand$EffectSize$SS_.b.D)
+
+  res_BaryGrand$EffectSize$r2_Categories <- res_BaryGrand$EffectSize$SS_.b.. / res_BaryGrand$EffectSize$SS_ab..
+  res_BaryGrand$EffectSize$r2_Groups     <- res_BaryGrand$EffectSize$SS_b_BETWEEN / (res_BaryGrand$EffectSize$SS_b_BETWEEN + res_BaryGrand$EffectSize$SS_b_WITHIN)
+  res_BaryGrand$EffectSize$r2_BD_ABCD    <- sum(res_BaryGrand$EffectSize$SS_.b.D) / sum(res_BaryGrand$EffectSize$SS_abCD)
+
+  res_BaryGrand$EffectSize$r2_Plain_Disc_.. <-     res_BaryGrand$EffectSize$SS_ab..  /     res_BaryGrand$EffectSize$SS_plain..
+  res_BaryGrand$EffectSize$r2_Plain_Disc_.d <- sum(res_BaryGrand$EffectSize$SS_ab.D) / sum(res_BaryGrand$EffectSize$SS_plain.D)
+  res_BaryGrand$EffectSize$r2_Plain_Disc_cd <- sum(res_BaryGrand$EffectSize$SS_abCD) / sum(res_BaryGrand$EffectSize$SS_plainCD)
+
+
   res_BaryGrand$r2$disc.cd_B.D <- res_BaryGrand$Proj_B.D$sum_SS_B.D_FromF / res_BaryGrand$Proj_disc.cd$sum_SS_disc.cd_FromF
 
 
@@ -433,6 +457,9 @@ EigenDiDiSTATIS <- function(Hierarchy_of_tables, DESIGN_rows, DESIGN_tables, n2k
   Prediction_Fixed_Rows$Confusion.d <- array(NA, dim=c(DESIGN_rows$B, DESIGN_rows$B, DESIGN_tables$D),
                                              dimnames = list(paste0(DESIGN_rows$labels, "_actual"), paste0(DESIGN_rows$labels, "_predicted"), DESIGN_tables$labels))
 
+  Prediction_Fixed_Rows$Confusion_norm.d <- array(NA, dim=c(DESIGN_rows$B, DESIGN_rows$B, DESIGN_tables$D),
+                                                  dimnames = list(paste0(DESIGN_rows$labels, "_actual"), paste0(DESIGN_rows$labels, "_predicted"), DESIGN_tables$labels))
+
   for(d in 1:DESIGN_tables$D){
     #Compute d2 from stimulus a(b) to all categories B (to give an a(b)xB matrix)
     Dev2_ab_2_B.d <- Dev2(res_BaryGrand$Proj_disc.D$F_disc.D[,,d], res_BaryGrand$eig$Fb..Cond)
@@ -446,6 +473,8 @@ EigenDiDiSTATIS <- function(Hierarchy_of_tables, DESIGN_rows, DESIGN_tables, n2k
 
     #Transform the design matrix to give a confusion matrix
     Prediction_Fixed_Rows$Confusion.d[,,d] <- t(DESIGN_rows$mat) %*% Prediction_Fixed_Rows$prediction_rows_mat.d[,,d]
+
+    Prediction_Fixed_Rows$Confusion_norm.d[,,d] <- round(Prediction_Fixed_Rows$Confusion.d[,,d] / rowSums(Prediction_Fixed_Rows$Confusion.d[,,d]), 2)
   }
 
 
