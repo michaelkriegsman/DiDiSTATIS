@@ -23,28 +23,20 @@ doc <- addFooter(doc, "Michael A. Kriegsman")
 #+++++++++++++++++++++++
 doc <- addSlide(doc, Slide_type)
 doc <- addTitle(doc, "F")
-plot_F <- function(){ Plot_MFA_F(res_MFA, axes = c(1,2), Flip_axis1 = TRUE, Flip_axis2 = FALSE, dev.new = FALSE) }
+plot_F <- function(){ Plot_DiSTATIS_F(res_DiSTATIS, axes = c(1,2), Flip_axis1 = FALSE, Flip_axis2 = FALSE, dev.new = FALSE) }
 doc <- addPlot(doc, plot_F, vector.graphic = TRUE)
 
 
-# Slide 3 : Add plot: F.k - s003
-#+++++++++++++++++++++++
-doc <- addSlide(doc, Slide_type)
-doc <- addTitle(doc, "F.k - s003")
-plot_F.k003 <- function(){ Plot_MFA_F.k(res_MFA, axes = c(1,2), k = 3, Flip_axis1 = TRUE, Flip_axis2 = FALSE, dev.new = FALSE) }
-doc <- addPlot(doc, plot_F.k003, vector.graphic = TRUE)
-
-
-# Slide 4 : Add plot: FiK; i = c(20,33)
+# Slide 3 : Add plot: FiK; i = c(20,33)
 #+++++++++++++++++++++++
 doc <- addSlide(doc, Slide_type)
 doc <- addTitle(doc, "FiK: i = c(20, 33)")
-plot_FiK <- function(){ Plot_MFA_FiK(res_MFA, axes = c(1,2), i = c(20, 33), Flip_axis1 = TRUE, Flip_axis2 = FALSE, dev.new = FALSE) }
+plot_FiK <- function(){ Plot_DiSTATIS_FiK(res_DiSTATIS, axes = c(1,2), i = c(20, 33), Flip_axis1 = FALSE, Flip_axis2 = FALSE, dev.new = FALSE) }
 doc <- addPlot(doc, plot_FiK, vector.graphic = TRUE)
 
 
 
-pptFileName <- paste0(Sys.Date(), " MFA Results ", round(runif(1),10), ".pptx")
-writeDoc(doc, paste0("C:/Users/Michael A. Kriegsman/Box Sync/Dissertation/LaTeX/Figures/MFA/", pptFileName) )
+pptFileName <- paste0(Sys.Date(), " DiSTATIS Results ", round(runif(1),10), ".pptx")
+writeDoc(doc, paste0("C:/Users/Michael A. Kriegsman/Box Sync/Dissertation/LaTeX/Figures/DiSTATIS/", pptFileName) )
 
 

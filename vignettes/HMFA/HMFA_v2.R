@@ -6,7 +6,7 @@ library(DiDiSTATIS)
 ## 1. Load:
 source('C:/Users/Michael A. Kriegsman/Box Sync/Dissertation/RStudio2Git/DiDiSTATIS/vignettes/My Examples/Initialize_Balanced_Dowling_NaturalStimuli_Example.R')
 
-## 2. Run MFA!
+## 2. Run HMFA!
 res_HMFA <- HMFA(DATA = Sort_balanced, data_are = 'sort',
                 DESIGN_rows = DESIGN$rows$Comp,
                 DESIGN_tables = DESIGN$tables$MusExp)
