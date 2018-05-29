@@ -1,4 +1,4 @@
-#Print_DiDiSTATIS_to_pptx.R
+#Print_DiDiSTATIS_Example2_AV_to_pptx.R
 #for instructions, see: http://www.sthda.com/english/wiki/create-and-format-powerpoint-documents-from-r-software
 
 
@@ -11,14 +11,14 @@ doc = pptx( )
 Slide_type <- "Content with Caption"
 
 Flip_axis1 <- FALSE
-Flip_axis2 <- FALSE
+Flip_axis2 <- TRUE
 
 
 
 # Slide 1 : Title slide
 #+++++++++++++++++++++++
 doc <- addSlide(doc, "Title Slide")
-doc <- addTitle(doc,"DiDiSTATIS Results")
+doc <- addTitle(doc, paste0("DiDiSTATIS Results: Example 2 (AV) \n MFA2 = ", res_DiDiSTATIS$input$MFA2_Flag))
 doc <- addDate(doc)
 doc <- addFooter(doc, "Michael A. Kriegsman")
 
@@ -87,11 +87,12 @@ doc <- addPlot(doc, plot_FabCd, vector.graphic = TRUE)
 
 # Slide 6 : Add plot: Confusion_Fixed_Grand
 #+++++++++++++++++++++++
-doc <- addSlide(doc, Slide_type)
+doc <- addSlide(doc, "Two Content")
 doc <- addTitle(doc, "Confusion_Fixed_Grand")
-plot_Confusion_Fixed_Grand <- function(){ PlotConfusion(res_DiDiSTATIS$res_BaryGrand$Prediction_Fixed_Rows$Confusion_Rows, dev_new = F) }
+plot_Confusion_Fixed_Grand <- function(){ PlotConfusion(res_DiDiSTATIS$res_BaryGrand$Prediction_Fixed_Rows$Confusion_Rows, scale_max_100 = F, dev_new = F) }
 doc <- addPlot(doc, plot_Confusion_Fixed_Grand, vector.graphic = TRUE)
-
+plot_Confusion_Fixed_Grand_norm <- function(){ PlotConfusion(res_DiDiSTATIS$res_BaryGrand$Prediction_Fixed_Rows$Confusion_Rows_norm, scale_max_100 = T, dev_new = F) }
+doc <- addPlot(doc, plot_Confusion_Fixed_Grand_norm, vector.graphic = TRUE)
 
 
 
@@ -100,7 +101,7 @@ for(d in 1:res_DiDiSTATIS$input$DESIGN_tables$D){
   #+++++++++++++++++++++++
   doc <- addSlide(doc, "Two Content")
   doc <- addTitle(doc, paste0("Confusion_Fixed_Group, d = ", d))
-  plot_Confusion_Fixed_Group_d <- function(){ PlotConfusion(res_DiDiSTATIS$res_BaryGrand$Prediction_Fixed_Rows$Confusion.d[,,d], dev_new = F) }
+  plot_Confusion_Fixed_Group_d <- function(){ PlotConfusion(res_DiDiSTATIS$res_BaryGrand$Prediction_Fixed_Rows$Confusion_norm.d[,,d], scale_max_100 = T, dev_new = F) }
   doc <- addPlot(doc, plot_Confusion_Fixed_Group_d, vector.graphic = TRUE)
   Plot_F.B.d <- function(){ Plot_DiDiSTATIS_FaB.d(res_DiDiSTATIS, priority = "d", connect = d, quiet_B.. = F, axes = c(1,2),
                                                   Flip_axis1 = Flip_axis1, Flip_axis2 = Flip_axis2, dev.new = F) }
@@ -109,21 +110,20 @@ for(d in 1:res_DiDiSTATIS$input$DESIGN_tables$D){
 
 
 if("Perm_Omnibus" %in% names(res_DiDiSTATIS)){
-  # Slide 11 : Add plot: Perm_r2_Plain_Disc_..
+  # Slide 12 : Add plot: Perm_r2_Categories
   #+++++++++++++++++++++++
   doc <- addSlide(doc, Slide_type)
-  doc <- addTitle(doc, "Perm_r2_Plain_Disc_..")
-  plot_Perm_r2_Plain_Disc_.. <- function(){ Plot_DiDiSTATIS_Perm_r2_Plain_Disc_.d(res_DiDiSTATIS, dev_new = F) }
-  doc <- addPlot(doc, plot_Perm_r2_Plain_Disc_.., vector.graphic = TRUE)
-
+  doc <- addTitle(doc, "Perm_r2_Categories..")
+  plot_Perm_r2_Categories <- function(){ Plot_DiDiSTATIS_Perm_r2_Categories..(res_DiDiSTATIS, dev_new = F) }
+  doc <- addPlot(doc, plot_Perm_r2_Categories, vector.graphic = TRUE)
 
 
 
   # Slide 12 : Add plot: Perm_r2_Categories
   #+++++++++++++++++++++++
   doc <- addSlide(doc, Slide_type)
-  doc <- addTitle(doc, "Perm_r2_Categories")
-  plot_Perm_r2_Categories <- function(){ Plot_DiDiSTATIS_Perm_r2_Categories..(res_DiDiSTATIS, dev_new = F) }
+  doc <- addTitle(doc, "Perm_r2_Categories.D")
+  plot_Perm_r2_Categories <- function(){ Plot_DiDiSTATIS_Perm_r2_Categories.D(res_DiDiSTATIS, dev_new = F) }
   doc <- addPlot(doc, plot_Perm_r2_Categories, vector.graphic = TRUE)
 
 
@@ -133,7 +133,7 @@ if("Perm_Omnibus" %in% names(res_DiDiSTATIS)){
   #+++++++++++++++++++++++
   doc <- addSlide(doc, Slide_type)
   doc <- addTitle(doc, "Perm_r2_Groups")
-  plot_Perm_r2_Groups <- function(){ Plot_DiDiSTATIS_Perm_r2_Groups(res_DiDiSTATIS, dev_new = F) }
+  plot_Perm_r2_Groups <- function(){ Plot_DiDiSTATIS_Perm_r2_Groups_b(res_DiDiSTATIS, dev_new = F) }
   doc <- addPlot(doc, plot_Perm_r2_Groups, vector.graphic = TRUE)
 
 }
@@ -157,19 +157,25 @@ if("Boot_Tables" %in% names(res_DiDiSTATIS)){
 if("LOO_Rows" %in% names(res_DiDiSTATIS)){
   # Slide 15 : Add plot: LOO_Grand
   #+++++++++++++++++++++++
-  doc <- addSlide(doc, Slide_type)
+  doc <- addSlide(doc, "Two Content")
   doc <- addTitle(doc, "LOO_Grand")
-  plot_LOO_Grand <- function(){ PlotConfusion(res_DiDiSTATIS$LOO_Rows$Grand$Confusion_rand_norm, is.percent = T, dev_new = F) }
+  plot_LOO_Grand <- function(){ PlotConfusion(res_DiDiSTATIS$LOO_Rows$Grand$Confusion_rand_norm, scale_max_100 = T, dev_new = F) }
   doc <- addPlot(doc, plot_LOO_Grand, vector.graphic = TRUE)
+  plot_LOO_Grand_Signed_Ctrb <- function(){ PlotConfusion_norm_SignedCtrb(res_DiDiSTATIS$LOO_Rows$Grand$Confusion_rand_norm, DESIGN_rows = res_DiDiSTATIS$input$DESIGN_rows, scale_max_100 = T, dev_new = F) }
+  doc <- addPlot(doc, plot_LOO_Grand_Signed_Ctrb, vector.graphic = TRUE)
+
+
 
 
   for(d in 1:res_DiDiSTATIS$input$DESIGN_tables$D){
     # Slide 16 : Add plot: LOO_Group_d
     #+++++++++++++++++++++++
-    doc <- addSlide(doc, Slide_type)
+    doc <- addSlide(doc, "Two Content")
     doc <- addTitle(doc, paste0("LOO_Group, d = ", d))
-    plot_LOO_Group_d <- function(){ PlotConfusion(res_DiDiSTATIS$LOO_Rows$Group$Confusion_rand_D_norm[,,d], is.percent = T, dev_new = F) }
+    plot_LOO_Group_d <- function(){ PlotConfusion(res_DiDiSTATIS$LOO_Rows$Group$Confusion_rand_D_norm[,,d], scale_max_100 = T, dev_new = F) }
     doc <- addPlot(doc, plot_LOO_Group_d, vector.graphic = TRUE)
+    plot_LOO_Group_d_Signed_Ctrb <- function(){ PlotConfusion_norm_SignedCtrb(res_DiDiSTATIS$LOO_Rows$Group$Confusion_rand_D_norm[,,d], DESIGN_rows = res_DiDiSTATIS$input$DESIGN_rows, scale_max_100 = T, dev_new = F) }
+    doc <- addPlot(doc, plot_LOO_Group_d_Signed_Ctrb, vector.graphic = TRUE)
   }
 }
 
@@ -178,19 +184,22 @@ if("LOO_Rows" %in% names(res_DiDiSTATIS)){
 if("SH_Rows" %in% names(res_DiDiSTATIS)){
   # Slide 19 : Add plot: SH_Grand
   #+++++++++++++++++++++++
-  doc <- addSlide(doc, Slide_type)
+  doc <- addSlide(doc, "Two Content")
   doc <- addTitle(doc, "SH_Grand")
-  plot_SH_Grand <- function(){ PlotConfusion(res_DiDiSTATIS$SH_Rows$Grand$Confusion_rand_norm, is.percent = T, dev_new = F) }
+  plot_SH_Grand <- function(){ PlotConfusion(res_DiDiSTATIS$SH_Rows$Grand$Confusion_rand_norm, scale_max_100 = T, dev_new = F) }
   doc <- addPlot(doc, plot_SH_Grand, vector.graphic = TRUE)
-
+  plot_SH_Grand_Signed_Ctrb <- function(){ PlotConfusion_norm_SignedCtrb(res_DiDiSTATIS$SH_Rows$Grand$Confusion_rand_norm, DESIGN_rows = res_DiDiSTATIS$input$DESIGN_rows, scale_max_100 = T, dev_new = F) }
+  doc <- addPlot(doc, plot_SH_Grand_Signed_Ctrb, vector.graphic = TRUE)
 
   for(d in 1:res_DiDiSTATIS$input$DESIGN_tables$D){
     # Slide 20 : Add plot: SH_Group_d
     #+++++++++++++++++++++++
-    doc <- addSlide(doc, Slide_type)
+    doc <- addSlide(doc, "Two Content")
     doc <- addTitle(doc, paste0("SH_Group, d = ", d))
-    plot_SH_Group_d <- function(){ PlotConfusion(res_DiDiSTATIS$SH_Rows$Group$Confusion_rand_D_norm[,,d], is.percent = T, dev_new = F) }
+    plot_SH_Group_d <- function(){ PlotConfusion(res_DiDiSTATIS$SH_Rows$Group$Confusion_rand_D_norm[,,d], scale_max_100 = T, dev_new = F) }
     doc <- addPlot(doc, plot_SH_Group_d, vector.graphic = TRUE)
+    plot_SH_Group_d_Signed_Ctrb <- function(){ PlotConfusion_norm_SignedCtrb(res_DiDiSTATIS$SH_Rows$Group$Confusion_rand_D_norm[,,d], DESIGN_rows = res_DiDiSTATIS$input$DESIGN_rows, scale_max_100 = T, dev_new = F) }
+    doc <- addPlot(doc, plot_SH_Group_d_Signed_Ctrb, vector.graphic = TRUE)
   }
 }
 

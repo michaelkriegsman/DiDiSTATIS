@@ -32,7 +32,7 @@ Plot_DiMDS_SSdisc(res_DiMDS)
 Plot_DiMDS_SS.b(res_DiMDS)
 Plot_DiMDS_SSab(res_DiMDS)
 
-PlotConfusion(Confusion_mat = res_DiMDS$Predict_Fixed_Rows$Confusion_mat)
+PlotConfusion(Confusion_mat = res_DiMDS$Predict_Fixed_Rows$Confusion_mat, scale_max_100 = F)
 
 #Permutation
 Plot_DiMDS_Perm_Rows_r2plain.b_perm(res_DiMDS)
