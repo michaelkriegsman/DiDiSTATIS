@@ -193,7 +193,7 @@ DiDiSTATIS_SH_rows <- function(input, Hierarchy_of_tables, res_BaryGrand, niter 
 
   Confusion_rand_norm <- round(Confusion_rand / rowSums(Confusion_rand), 2) *100
 
-
+  Class_accuracy <- mean(diag(Confusion_rand_norm))
 
 
 
@@ -207,11 +207,13 @@ DiDiSTATIS_SH_rows <- function(input, Hierarchy_of_tables, res_BaryGrand, niter 
   dimnames(Confusion_rand_D_norm) <- list(paste0(DESIGN_rows$labels, "_actual"),
                                           paste0(DESIGN_rows$labels, "_predicted"),
                                           DESIGN_tables$labels)
-
+  Class_accuracy_D <- matrix(NA, DESIGN_tables$D)
+  rownames(Class_accuracy_D) <- DESIGN_tables$labels
 
   for(d in 1:DESIGN_tables$D){
     Confusion_rand_D[,,d]    <- t(DESIGN_rows$mat) %*% Prediction_array_D_sum[,,d]
     Confusion_rand_D_norm[,,d] <- round(Confusion_rand_D[,,d] / rowSums(Confusion_rand_D[,,d]), 2) *100
+    Class_accuracy_D[d] <- mean(diag(Confusion_rand_D_norm[,,d]))
   }
 
 

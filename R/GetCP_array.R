@@ -13,13 +13,13 @@ GetCP_array <- function(DATA, data_are=NULL){
     CP_array <- Dist2CP(D2_array)
   }
   if(data_are=='d_array'){
-    #Square and double center a distance matrix to give a CP matrix
-    CP_array <- DblCenterD2(DATA^2)
+    #Square and double center matrices of a distance array to give a CP array
+    CP_array <- array(apply(DATA^2, 3, DblCenterD2), dim(DATA), dimnames(DATA))
   }
 
   if(data_are=='d2_array'){
-    #Double center a squared distance matrix to give a CP matrix
-    CP_array <- DblCenterD2(DATA)
+    #Double center matrices of a distance array to give a CP array
+    CP_array <- array(apply(DATA, 3, DblCenterD2), dim(DATA), dimnames(DATA))
   }
 
   if(data_are=='CP_array'){

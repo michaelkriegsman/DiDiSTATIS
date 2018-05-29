@@ -166,250 +166,264 @@ EigenDiDiSTATIS <- function(Hierarchy_of_tables, DESIGN_rows, DESIGN_tables, n2k
   res_BaryGrand$EffectSize$SS_plain.. <- res_BaryGrand$Plain$SS_plain_fromTrace
   res_BaryGrand$EffectSize$SS_plain.D <- res_BaryGrand$Plain$SS_plain.d_fromTrace
   res_BaryGrand$EffectSize$SS_plainCD <- res_BaryGrand$Plain$SS_plain.cd_fromTrace
+
+  res_BaryGrand$EffectSize$SS_aINb.. <- res_BaryGrand$EffectSize$SS_ab.. - res_BaryGrand$EffectSize$SS_.b..
+  res_BaryGrand$EffectSize$SS_aINb.D <- res_BaryGrand$EffectSize$SS_ab.D - res_BaryGrand$EffectSize$SS_.b.D
+  res_BaryGrand$EffectSize$SS_aINbCD <- res_BaryGrand$EffectSize$SS_abCD - res_BaryGrand$EffectSize$SS_.bCD
+
   res_BaryGrand$EffectSize$SS_b_BETWEEN <- sum(res_BaryGrand$EffectSize$SS_.b.D) -     res_BaryGrand$EffectSize$SS_.b..
   res_BaryGrand$EffectSize$SS_b_WITHIN  <- sum(res_BaryGrand$EffectSize$SS_.bCD) - sum(res_BaryGrand$EffectSize$SS_.b.D)
+  res_BaryGrand$EffectSize$SS_disc_BETWEEN <- sum(res_BaryGrand$EffectSize$SS_ab.D) -     res_BaryGrand$EffectSize$SS_ab..
+  res_BaryGrand$EffectSize$SS_disc_WITHIN  <- sum(res_BaryGrand$EffectSize$SS_abCD) - sum(res_BaryGrand$EffectSize$SS_ab.D)
 
-  res_BaryGrand$EffectSize$r2_Categories <- res_BaryGrand$EffectSize$SS_.b.. / res_BaryGrand$EffectSize$SS_ab..
-  res_BaryGrand$EffectSize$r2_Groups     <- res_BaryGrand$EffectSize$SS_b_BETWEEN / (res_BaryGrand$EffectSize$SS_b_BETWEEN + res_BaryGrand$EffectSize$SS_b_WITHIN)
+  res_BaryGrand$EffectSize$r2_Categories.. <- res_BaryGrand$EffectSize$SS_.b.. / res_BaryGrand$EffectSize$SS_ab..
+  res_BaryGrand$EffectSize$r2_Categories.D <- res_BaryGrand$EffectSize$SS_.b.D / res_BaryGrand$EffectSize$SS_ab.D
+  res_BaryGrand$EffectSize$r2_Categories.D_summed <- sum(res_BaryGrand$EffectSize$SS_.b.D) / sum(res_BaryGrand$EffectSize$SS_ab.D)
+  res_BaryGrand$EffectSize$r2_CategoriesCD <- res_BaryGrand$EffectSize$SS_.bCD / res_BaryGrand$EffectSize$SS_abCD
+  res_BaryGrand$EffectSize$r2_CategoriesCD_summed <- sum(res_BaryGrand$EffectSize$SS_.bCD) / sum(res_BaryGrand$EffectSize$SS_abCD)
+  res_BaryGrand$EffectSize$r2_Groups_b     <- res_BaryGrand$EffectSize$SS_b_BETWEEN / (res_BaryGrand$EffectSize$SS_b_BETWEEN + res_BaryGrand$EffectSize$SS_b_WITHIN)
+  res_BaryGrand$EffectSize$r2_Groups_Disc  <- res_BaryGrand$EffectSize$SS_disc_BETWEEN / (res_BaryGrand$EffectSize$SS_disc_BETWEEN + res_BaryGrand$EffectSize$SS_disc_WITHIN)
   res_BaryGrand$EffectSize$r2_BD_ABCD    <- sum(res_BaryGrand$EffectSize$SS_.b.D) / sum(res_BaryGrand$EffectSize$SS_abCD)
 
-  res_BaryGrand$EffectSize$r2_Plain_Disc_.. <-     res_BaryGrand$EffectSize$SS_ab..  /     res_BaryGrand$EffectSize$SS_plain..
-  res_BaryGrand$EffectSize$r2_Plain_Disc_.d <- sum(res_BaryGrand$EffectSize$SS_ab.D) / sum(res_BaryGrand$EffectSize$SS_plain.D)
-  res_BaryGrand$EffectSize$r2_Plain_Disc_cd <- sum(res_BaryGrand$EffectSize$SS_abCD) / sum(res_BaryGrand$EffectSize$SS_plainCD)
-
-
-  res_BaryGrand$r2$disc.cd_B.D <- res_BaryGrand$Proj_B.D$sum_SS_B.D_FromF / res_BaryGrand$Proj_disc.cd$sum_SS_disc.cd_FromF
-
-
-
-
-
-
-
-
-
-
-  #Deviation squared (Group to Grand) (Fb.d to Fb..)
-  #### There is a faster way to do this.
-  #### Now I have computed the sum_SS above, so can compute these deviations by simple subtraction.
-  #### LET's CHECK MY ANSWERS. IF THESE WORK, THEN MY SS ARE BARYCENTRIC, AND MY CRAZY HIERARCHICAL FIGURE IS RIGHT.
-  Dev2_Fb.d_Fb.. <- matrix(NA, DESIGN_rows$B, DESIGN_tables$D,
-                           dimnames = list(DESIGN_rows$labels, DESIGN_tables$labels))
-  for(d in 1:DESIGN_tables$D){
-    #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
-    Dev2_Fb.d_Fb..[,d] <- diag(Dev2(res_BaryGrand$eig$Fb..Cond, res_BaryGrand$Proj_B.D$F_B.D_Cond[,,d]))
-  }
-
-  #For each stimulus, what's the dev2 from a given group to the grand?
-  res_BaryGrand$Dev2_Fb.d_Fb..$Dev2_Fb.d_Fb.. <- Dev2_Fb.d_Fb..
-  #And multiply by the number of data points hidden with each data point
-  #This is simply Weighting the SS computed on means... need to account for number of stimuli in each category...
-  res_BaryGrand$Dev2_Fb.d_Fb..$SS_Dev2_Fb.d_Fb.. <- t(colSums(DESIGN_rows$mat)) %*% Dev2_Fb.d_Fb..
-  #And to make it an r2, divide each SS by their total.
-  #The null would be that each groups is 1/D away from the grand.
-  res_BaryGrand$Dev2_Fb.d_Fb..$r2_Dev2_Fb.d_Fb.. <- res_BaryGrand$Dev2_Fb.d_Fb..$SS_Dev2_Fb.d_Fb.. / sum(res_BaryGrand$Dev2_Fb.d_Fb..$SS_Dev2_Fb.d_Fb..)
-  #So for composers, Group Mid explains 4% of between-group differences, whereas Group High explains 59%.
-
-
-
-
-
-
-
-
-
-  #Deviation squared (disc.cd to b.cd)
-  Dev2_Fdisc.cd_Fb.cd <- matrix(NA, DESIGN_rows$AB, DESIGN_tables$CD,
-                                dimnames = list(rownames(DESIGN_rows$mat), rownames(DESIGN_tables$mats)))
-  for(cd in 1:DESIGN_tables$CD){
-    #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
-    Dev2_Fdisc.cd_Fb.cd[,cd] <- diag(Dev2(res_BaryGrand$Proj_disc.cd$F_disc.cd[,,cd], res_BaryGrand$Proj_B.cd$F_B.cd[,,cd]))
-  }
-
-  #For each stimulus, what's the dev2 from a given group to the grand?
-  res_BaryGrand$Dev2_Fdisc.cd_Fb.cd$Dev2_Fdisc.cd_Fb.cd <- Dev2_Fdisc.cd_Fb.cd
-  #And multiply by the number of data points hidden with each data point
-  res_BaryGrand$Dev2_Fdisc.cd_Fb.cd$SS_Dev2_Fdisc.cd_Fb.cd <- matrix(1, 1, DESIGN_rows$AB) %*% Dev2_Fdisc.cd_Fb.cd %*% matrix(1, DESIGN_tables$CD, 1)
-
-
-
-
-
-
-
-
-
-  #Deviation squared (disc.d to b.d)
-  Dev2_Fdisc.d_Fb.d <- matrix(NA, DESIGN_rows$AB, DESIGN_tables$D,
-                              dimnames = list(rownames(DESIGN_rows$mat), colnames(DESIGN_tables$mats)))
-  for(d in 1:DESIGN_tables$D){
-    #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
-    Dev2_Fdisc.d_Fb.d[,d] <- diag(Dev2(res_BaryGrand$Proj_disc.D$F_disc.D[,,d], res_BaryGrand$Proj_B.D$F_B.D[,,d]))
-  }
-
-  #For each stimulus, what's the dev2 from a given group to the grand?
-  res_BaryGrand$Dev2_Fdisc.d_Fb.d$Dev2_Fdisc.d_Fb.d <- Dev2_Fdisc.d_Fb.d
-  #And multiply by the number of data points hidden with each data point
-  res_BaryGrand$Dev2_Fdisc.d_Fb.d$SS_Dev2_Fdisc.d_Fb.d <- matrix(1, 1, DESIGN_rows$AB) %*% Dev2_Fdisc.d_Fb.d %*% colSums(DESIGN_tables$mat)
-
-
-
-
-
-
-
-  #Deviation squared (disc.. to b..)
-  Dev2_Fdisc.._Fb.. <- matrix(NA, DESIGN_rows$AB, 1,
-                              dimnames = list(rownames(DESIGN_rows$mat), paste0('BaryGrand')))
-  # for(d in 1:DESIGN_tables$D){
-  #The squared distance from a given row of Fdisc.. to the corresponding row of Fb..
-  Dev2_Fdisc.._Fb..[,1] <- diag(Dev2(res_BaryGrand$Proj_disc..$F_disc.., res_BaryGrand$eig$Fb..))
-  # }
-
-  #For each stimulus, what's the dev2 from a given group to the grand?
-  res_BaryGrand$Dev2_Fdisc.._Fb..$Dev2_Fdisc.._Fb.. <- Dev2_Fdisc.._Fb..
-  #And multiply by the number of data points hidden with each data point
-  res_BaryGrand$Dev2_Fdisc.._Fb..$SS_Dev2_Fdisc.._Fb.. <- matrix(1, 1, DESIGN_rows$AB) %*% Dev2_Fdisc.._Fb.. * DESIGN_tables$CD
-
-
-
-
-
-
-
-
-
-  #Deviation squared (disc.cd to disc.d)
-  Dev2_Fdisc.cd_Fdisc.d <- matrix(NA, DESIGN_rows$AB, DESIGN_tables$CD,
-                                  dimnames = list(rownames(DESIGN_rows$mat), rownames(DESIGN_tables$mats)))
-
-  for(d in 1:DESIGN_tables$D){
-    for(cd in 1:colSums(DESIGN_tables$mat)[d]){
-
-      which_table <- which(DESIGN_tables$mat[,d]==1)[cd]
-      #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
-      Dev2_Fdisc.cd_Fdisc.d[,which_table] <- diag(Dev2(res_BaryGrand$Proj_disc.cd$F_disc.cd[,,which_table], res_BaryGrand$Proj_disc.D$F_disc.D[,,d]))
-    }
-  }
-
-  #For each stimulus, what's the dev2 from a given group to the grand?
-  res_BaryGrand$Dev2_Fdisc.cd_Fdisc.d$Dev2_Fdisc.cd_Fdisc.d <- Dev2_Fdisc.cd_Fdisc.d
-  #And multiply by the number of data points hidden with each data point
-  res_BaryGrand$Dev2_Fdisc.cd_Fdisc.d$SS_Dev2_Fdisc.cd_Fdisc.d <- matrix(1, 1, DESIGN_rows$AB) %*% Dev2_Fdisc.cd_Fdisc.d %*% matrix(1, DESIGN_tables$CD, 1)
-
-
-
-
-
-
-
-
-
-  #Deviation squared (b.cd to b.d)
-  Dev2_Fb.cd_Fb.d <- matrix(NA, DESIGN_rows$B, DESIGN_tables$CD,
-                            dimnames = list(colnames(DESIGN_rows$mat), rownames(DESIGN_tables$mats)))
-
-  for(d in 1:DESIGN_tables$D){
-    for(cd in 1:colSums(DESIGN_tables$mat)[d]){
-
-      which_table <- which(DESIGN_tables$mat[,d]==1)[cd]
-      #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
-      Dev2_Fb.cd_Fb.d[,which_table] <- diag(Dev2(res_BaryGrand$Proj_B.cd$F_B.cd_Cond[,,which_table], res_BaryGrand$Proj_B.D$F_B.D_Cond[,,d]))
-    }
-  }
-
-  #For each stimulus, what's the dev2 from a given group to the grand?
-  res_BaryGrand$Dev2_Fb.cd_Fb.d$Dev2_Fb.cd_Fb.d <- Dev2_Fb.cd_Fb.d
-  #And multiply by the number of data points hidden with each data point
-  res_BaryGrand$Dev2_Fb.cd_Fb.d$SS_Dev2_Fb.cd_Fb.d <- colSums(DESIGN_rows$mat) %*% Dev2_Fb.cd_Fb.d %*% matrix(1, DESIGN_tables$CD, 1)
-
-
-
-
-
-
-
-
-  #Deviation squared (disc.d to disc..)
-  Dev2_Fdisc.d_Fdisc.. <- matrix(NA, DESIGN_rows$AB, DESIGN_tables$D,
-                                 dimnames = list(rownames(DESIGN_rows$mat), colnames(DESIGN_tables$mats)))
-
-  for(d in 1:DESIGN_tables$D){
-    #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
-    Dev2_Fdisc.d_Fdisc..[,d] <- diag(Dev2(res_BaryGrand$Proj_disc.D$F_disc.D[,,d], res_BaryGrand$Proj_disc..$F_disc..))
-  }
-
-  #For each stimulus, what's the dev2 from a given group to the grand?
-  res_BaryGrand$Dev2_Fdisc.d_Fdisc..$Dev2_Fdisc.d_Fdisc.. <- Dev2_Fdisc.d_Fdisc..
-  #And multiply by the number of data points hidden with each data point
-  res_BaryGrand$Dev2_Fdisc.d_Fdisc..$SS_Dev2_Fdisc.d_Fdisc.. <- matrix(1, 1, DESIGN_rows$AB) %*% Dev2_Fdisc.d_Fdisc.. %*% colSums(DESIGN_tables$mat)
-
-
-
-
-
-
-
-
-
-
-  #Deviation squared (b.cd to b.d)
-  Dev2_Fb.d_Fb.. <- matrix(NA, DESIGN_rows$B, DESIGN_tables$D,
-                           dimnames = list(colnames(DESIGN_rows$mat), colnames(DESIGN_tables$mats)))
-
-  for(d in 1:DESIGN_tables$D){
-    #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
-    Dev2_Fb.d_Fb..[,d] <- diag(Dev2(res_BaryGrand$Proj_B.D$F_B.D_Cond[,,d], res_BaryGrand$eig$Fb..Cond))
-  }
-
-  #For each stimulus, what's the dev2 from a given group to the grand?
-  res_BaryGrand$Dev2_Fb.d_Fb..$Dev2_Fb.d_Fb.. <- Dev2_Fb.d_Fb..
-  #And multiply by the number of data points hidden with each data point
-  res_BaryGrand$Dev2_Fb.d_Fb..$SS_Dev2_Fb.d_Fb.. <- colSums(DESIGN_rows$mat) %*% Dev2_Fb.d_Fb.. %*% colSums(DESIGN_tables$mat)
-
-
-
-
-
-
-
-
-
-
-  # #Deviation squared (Participant to Group)
-  # Dev2_Fb.d_Fbcd <- matrix(NA, DESIGN_rows$B, DESIGN_tables$CD,
-  #                          dimnames = list(DESIGN_rows$labels, rownames(DESIGN_tables$mat)))
-  # for(d in 1:DESIGN_tables$D){
-  #   for(cd in 1:(colSums(DESIGN_tables$mat)[d])){
-  #
-  #      which_table <- which(DESIGN_tables$mat[,d]==1)[cd]
-  #      #The squared distance from a given row of Fb.d to the corresponding row of Fbcd
-  #      Dev2_Fb.d_Fbcd[,which_table] <- diag(Dev2(res_BaryGrand$Proj_B.D$F_B.D_Cond[,,d], res_BaryGrand$Proj_B.cd$F_B.cd_Cond[,,which_table]))
-  #
-  #    }
-  #  }
-  #
-  #  res_BaryGrand$Dev2$Dev2_Participant_to_Group <- colSums(Dev2_Fb.d_Fbcd)
-
-
-
-
-
-
+  res_BaryGrand$EffectSize$r2_Plain_Disc_.. <- res_BaryGrand$EffectSize$SS_ab.. / res_BaryGrand$EffectSize$SS_plain..
+  res_BaryGrand$EffectSize$r2_Plain_Disc_.D <- res_BaryGrand$EffectSize$SS_ab.D / res_BaryGrand$EffectSize$SS_plain.D
+  res_BaryGrand$EffectSize$r2_Plain_Disc_.D_summed <- sum(res_BaryGrand$EffectSize$SS_ab.D) / sum(res_BaryGrand$EffectSize$SS_plain.D)
+  res_BaryGrand$EffectSize$r2_Plain_Disc_CD <- res_BaryGrand$EffectSize$SS_abCD / res_BaryGrand$EffectSize$SS_plainCD
+  res_BaryGrand$EffectSize$r2_Plain_Disc_CD_summed <- sum(res_BaryGrand$EffectSize$SS_abCD) / sum(res_BaryGrand$EffectSize$SS_plainCD)
+
+
+
+
+
+
+
+
+
+
+
+
+#
+#   #Deviation squared (Group to Grand) (Fb.d to Fb..)
+#   #### There is a faster way to do this.
+#   #### Now I have computed the sum_SS above, so can compute these deviations by simple subtraction.
+#   #### LET's CHECK MY ANSWERS. IF THESE WORK, THEN MY SS ARE BARYCENTRIC, AND MY CRAZY HIERARCHICAL FIGURE IS RIGHT.
+#   Dev2_Fb.d_Fb.. <- matrix(NA, DESIGN_rows$B, DESIGN_tables$D,
+#                            dimnames = list(DESIGN_rows$labels, DESIGN_tables$labels))
+#   for(d in 1:DESIGN_tables$D){
+#     #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
+#     Dev2_Fb.d_Fb..[,d] <- diag(Dev2(res_BaryGrand$eig$Fb..Cond, res_BaryGrand$Proj_B.D$F_B.D_Cond[,,d]))
+#   }
+#
+#   #For each stimulus, what's the dev2 from a given group to the grand?
+#   res_BaryGrand$Dev2_Fb.d_Fb..$Dev2_Fb.d_Fb.. <- Dev2_Fb.d_Fb..
+#   #And multiply by the number of data points hidden with each data point
+#   #This is simply Weighting the SS computed on means... need to account for number of stimuli in each category...
+#   res_BaryGrand$Dev2_Fb.d_Fb..$SS_Dev2_Fb.d_Fb.. <- t(colSums(DESIGN_rows$mat)) %*% Dev2_Fb.d_Fb..
+#   #And to make it an r2, divide each SS by their total.
+#   #The null would be that each groups is 1/D away from the grand.
+#   res_BaryGrand$Dev2_Fb.d_Fb..$r2_Dev2_Fb.d_Fb.. <- res_BaryGrand$Dev2_Fb.d_Fb..$SS_Dev2_Fb.d_Fb.. / sum(res_BaryGrand$Dev2_Fb.d_Fb..$SS_Dev2_Fb.d_Fb..)
+#   #So for composers, Group Mid explains 4% of between-group differences, whereas Group High explains 59%.
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#   #Deviation squared (disc.cd to b.cd)
+#   Dev2_Fdisc.cd_Fb.cd <- matrix(NA, DESIGN_rows$AB, DESIGN_tables$CD,
+#                                 dimnames = list(rownames(DESIGN_rows$mat), rownames(DESIGN_tables$mats)))
+#   for(cd in 1:DESIGN_tables$CD){
+#     #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
+#     Dev2_Fdisc.cd_Fb.cd[,cd] <- diag(Dev2(res_BaryGrand$Proj_disc.cd$F_disc.cd[,,cd], res_BaryGrand$Proj_B.cd$F_B.cd[,,cd]))
+#   }
+#
+#   #For each stimulus, what's the dev2 from a given group to the grand?
+#   res_BaryGrand$Dev2_Fdisc.cd_Fb.cd$Dev2_Fdisc.cd_Fb.cd <- Dev2_Fdisc.cd_Fb.cd
+#   #And multiply by the number of data points hidden with each data point
+#   res_BaryGrand$Dev2_Fdisc.cd_Fb.cd$SS_Dev2_Fdisc.cd_Fb.cd <- matrix(1, 1, DESIGN_rows$AB) %*% Dev2_Fdisc.cd_Fb.cd %*% matrix(1, DESIGN_tables$CD, 1)
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#   #Deviation squared (disc.d to b.d)
+#   Dev2_Fdisc.d_Fb.d <- matrix(NA, DESIGN_rows$AB, DESIGN_tables$D,
+#                               dimnames = list(rownames(DESIGN_rows$mat), colnames(DESIGN_tables$mats)))
+#   for(d in 1:DESIGN_tables$D){
+#     #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
+#     Dev2_Fdisc.d_Fb.d[,d] <- diag(Dev2(res_BaryGrand$Proj_disc.D$F_disc.D[,,d], res_BaryGrand$Proj_B.D$F_B.D[,,d]))
+#   }
+#
+#   #For each stimulus, what's the dev2 from a given group to the grand?
+#   res_BaryGrand$Dev2_Fdisc.d_Fb.d$Dev2_Fdisc.d_Fb.d <- Dev2_Fdisc.d_Fb.d
+#   #And multiply by the number of data points hidden with each data point
+#   res_BaryGrand$Dev2_Fdisc.d_Fb.d$SS_Dev2_Fdisc.d_Fb.d <- matrix(1, 1, DESIGN_rows$AB) %*% Dev2_Fdisc.d_Fb.d %*% colSums(DESIGN_tables$mat)
+#
+#
+#
+#
+#
+#
+#
+#   #Deviation squared (disc.. to b..)
+#   Dev2_Fdisc.._Fb.. <- matrix(NA, DESIGN_rows$AB, 1,
+#                               dimnames = list(rownames(DESIGN_rows$mat), paste0('BaryGrand')))
+#   # for(d in 1:DESIGN_tables$D){
+#   #The squared distance from a given row of Fdisc.. to the corresponding row of Fb..
+#   Dev2_Fdisc.._Fb..[,1] <- diag(Dev2(res_BaryGrand$Proj_disc..$F_disc.., res_BaryGrand$eig$Fb..))
+#   # }
+#
+#   #For each stimulus, what's the dev2 from a given group to the grand?
+#   res_BaryGrand$Dev2_Fdisc.._Fb..$Dev2_Fdisc.._Fb.. <- Dev2_Fdisc.._Fb..
+#   #And multiply by the number of data points hidden with each data point
+#   res_BaryGrand$Dev2_Fdisc.._Fb..$SS_Dev2_Fdisc.._Fb.. <- matrix(1, 1, DESIGN_rows$AB) %*% Dev2_Fdisc.._Fb.. * DESIGN_tables$CD
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#   #Deviation squared (disc.cd to disc.d)
+#   Dev2_Fdisc.cd_Fdisc.d <- matrix(NA, DESIGN_rows$AB, DESIGN_tables$CD,
+#                                   dimnames = list(rownames(DESIGN_rows$mat), rownames(DESIGN_tables$mats)))
+#
+#   for(d in 1:DESIGN_tables$D){
+#     for(cd in 1:colSums(DESIGN_tables$mat)[d]){
+#
+#       which_table <- which(DESIGN_tables$mat[,d]==1)[cd]
+#       #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
+#       Dev2_Fdisc.cd_Fdisc.d[,which_table] <- diag(Dev2(res_BaryGrand$Proj_disc.cd$F_disc.cd[,,which_table], res_BaryGrand$Proj_disc.D$F_disc.D[,,d]))
+#     }
+#   }
+#
+#   #For each stimulus, what's the dev2 from a given group to the grand?
+#   res_BaryGrand$Dev2_Fdisc.cd_Fdisc.d$Dev2_Fdisc.cd_Fdisc.d <- Dev2_Fdisc.cd_Fdisc.d
+#   #And multiply by the number of data points hidden with each data point
+#   res_BaryGrand$Dev2_Fdisc.cd_Fdisc.d$SS_Dev2_Fdisc.cd_Fdisc.d <- matrix(1, 1, DESIGN_rows$AB) %*% Dev2_Fdisc.cd_Fdisc.d %*% matrix(1, DESIGN_tables$CD, 1)
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#   #Deviation squared (b.cd to b.d)
+#   Dev2_Fb.cd_Fb.d <- matrix(NA, DESIGN_rows$B, DESIGN_tables$CD,
+#                             dimnames = list(colnames(DESIGN_rows$mat), rownames(DESIGN_tables$mats)))
+#
+#   for(d in 1:DESIGN_tables$D){
+#     for(cd in 1:colSums(DESIGN_tables$mat)[d]){
+#
+#       which_table <- which(DESIGN_tables$mat[,d]==1)[cd]
+#       #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
+#       Dev2_Fb.cd_Fb.d[,which_table] <- diag(Dev2(res_BaryGrand$Proj_B.cd$F_B.cd_Cond[,,which_table], res_BaryGrand$Proj_B.D$F_B.D_Cond[,,d]))
+#     }
+#   }
+#
+#   #For each stimulus, what's the dev2 from a given group to the grand?
+#   res_BaryGrand$Dev2_Fb.cd_Fb.d$Dev2_Fb.cd_Fb.d <- Dev2_Fb.cd_Fb.d
+#   #And multiply by the number of data points hidden with each data point
+#   res_BaryGrand$Dev2_Fb.cd_Fb.d$SS_Dev2_Fb.cd_Fb.d <- colSums(DESIGN_rows$mat) %*% Dev2_Fb.cd_Fb.d %*% matrix(1, DESIGN_tables$CD, 1)
+#
+#
+#
+#
+#
+#
+#
+#
+#   #Deviation squared (disc.d to disc..)
+#   Dev2_Fdisc.d_Fdisc.. <- matrix(NA, DESIGN_rows$AB, DESIGN_tables$D,
+#                                  dimnames = list(rownames(DESIGN_rows$mat), colnames(DESIGN_tables$mats)))
+#
+#   for(d in 1:DESIGN_tables$D){
+#     #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
+#     Dev2_Fdisc.d_Fdisc..[,d] <- diag(Dev2(res_BaryGrand$Proj_disc.D$F_disc.D[,,d], res_BaryGrand$Proj_disc..$F_disc..))
+#   }
+#
+#   #For each stimulus, what's the dev2 from a given group to the grand?
+#   res_BaryGrand$Dev2_Fdisc.d_Fdisc..$Dev2_Fdisc.d_Fdisc.. <- Dev2_Fdisc.d_Fdisc..
+#   #And multiply by the number of data points hidden with each data point
+#   res_BaryGrand$Dev2_Fdisc.d_Fdisc..$SS_Dev2_Fdisc.d_Fdisc.. <- matrix(1, 1, DESIGN_rows$AB) %*% Dev2_Fdisc.d_Fdisc.. %*% colSums(DESIGN_tables$mat)
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#   #Deviation squared (b.cd to b.d)
+#   Dev2_Fb.d_Fb.. <- matrix(NA, DESIGN_rows$B, DESIGN_tables$D,
+#                            dimnames = list(colnames(DESIGN_rows$mat), colnames(DESIGN_tables$mats)))
+#
+#   for(d in 1:DESIGN_tables$D){
+#     #The squared distance from a given row of Fb.. to the corresponding row of Fb.d
+#     Dev2_Fb.d_Fb..[,d] <- diag(Dev2(res_BaryGrand$Proj_B.D$F_B.D_Cond[,,d], res_BaryGrand$eig$Fb..Cond))
+#   }
+#
+#   #For each stimulus, what's the dev2 from a given group to the grand?
+#   res_BaryGrand$Dev2_Fb.d_Fb..$Dev2_Fb.d_Fb.. <- Dev2_Fb.d_Fb..
+#   #And multiply by the number of data points hidden with each data point
+#   res_BaryGrand$Dev2_Fb.d_Fb..$SS_Dev2_Fb.d_Fb.. <- colSums(DESIGN_rows$mat) %*% Dev2_Fb.d_Fb.. %*% colSums(DESIGN_tables$mat)
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#  # #Deviation squared (Participant to Group)
+#  # Dev2_Fb.d_Fbcd <- matrix(NA, DESIGN_rows$B, DESIGN_tables$CD,
+#  #                          dimnames = list(DESIGN_rows$labels, rownames(DESIGN_tables$mat)))
+#  # for(d in 1:DESIGN_tables$D){
+#  #   for(cd in 1:(colSums(DESIGN_tables$mat)[d])){
+#  #
+#  #      which_table <- which(DESIGN_tables$mat[,d]==1)[cd]
+#  #      #The squared distance from a given row of Fb.d to the corresponding row of Fbcd
+#  #      Dev2_Fb.d_Fbcd[,which_table] <- diag(Dev2(res_BaryGrand$Proj_B.D$F_B.D_Cond[,,d], res_BaryGrand$Proj_B.cd$F_B.cd_Cond[,,which_table]))
+#  #
+#  #    }
+#  #  }
+#  #
+#  #  res_BaryGrand$Dev2$Dev2_Participant_to_Group <- colSums(Dev2_Fb.d_Fbcd)
+#
+#
+#
+#
+#
+#
 
 
 
 
   X <- " "
   res_BaryGrand$SS_summary <- data.frame(rbind(c(X, "C(D)", ".(D)", "Within-group", X),
-                                               c("Disc", round(res_BaryGrand$Proj_disc.cd$sum_SS_disc.cd_FromF,3), round(res_BaryGrand$Proj_disc.D$sum_SS_disc.D_FromF, 3), round(res_BaryGrand$Dev2_Fdisc.cd_Fdisc.d$SS_Dev2_Fdisc.cd_Fdisc.d, 3), X),
-                                               c("B", round(res_BaryGrand$Proj_B.cd$sum_SS_B.cd_fromF, 3), round(res_BaryGrand$Proj_B.D$sum_SS_B.D_FromF, 3), round(res_BaryGrand$Dev2_Fb.cd_Fb.d$SS_Dev2_Fb.cd_Fb.d, 3), X),
-                                               c("A(B)", round(res_BaryGrand$Dev2_Fdisc.cd_Fb.cd$SS_Dev2_Fdisc.cd_Fb.cd, 3), round(res_BaryGrand$Dev2_Fdisc.d_Fb.d$SS_Dev2_Fdisc.d_Fb.d, 3), X, X),
+                                               c("Disc", round(sum(res_BaryGrand$EffectSize$SS_abCD),3),    round(sum(res_BaryGrand$EffectSize$SS_ab.D), 3),   round(res_BaryGrand$EffectSize$SS_disc_WITHIN, 3), X),
+                                               c("B",    round(sum(res_BaryGrand$EffectSize$SS_.bCD), 3),   round(sum(res_BaryGrand$EffectSize$SS_.b.D), 3),   round(res_BaryGrand$EffectSize$SS_b_WITHIN, 3), X),
+                                               c("A(B)", round(sum(res_BaryGrand$EffectSize$SS_aINbCD), 3), round(sum(res_BaryGrand$EffectSize$SS_aINb.D), 3), X, X),
                                                c(X, X, X, X, X),
                                                c(X, X, ".(D)", ".(.)", "Between-group"),
-                                               c(X, "Disc", round(res_BaryGrand$Proj_disc.D$sum_SS_disc.D_FromF, 3), round(res_BaryGrand$Proj_disc..$SS_disc.._fromF, 3), round(res_BaryGrand$Dev2_Fdisc.d_Fdisc..$SS_Dev2_Fdisc.d_Fdisc.., 3)),
-                                               c(X, "B", round(res_BaryGrand$Proj_B.D$sum_SS_B.D_FromF, 3), round(res_BaryGrand$eig$SS_B.._fromF, 3), round(res_BaryGrand$Dev2_Fb.d_Fb..$SS_Dev2_Fb.d_Fb.., 3)),
-                                               c(X, "A(B)", round(res_BaryGrand$Dev2_Fdisc.d_Fb.d$SS_Dev2_Fdisc.d_Fb.d, 3), round(res_BaryGrand$Dev2_Fdisc.._Fb..$SS_Dev2_Fdisc.._Fb.., 3), X)))
+                                               c(X, "Disc", round(sum(res_BaryGrand$EffectSize$SS_ab.D), 3),   round(res_BaryGrand$EffectSize$SS_ab.., 3),   round(res_BaryGrand$EffectSize$SS_disc_BETWEEN, 3)),
+                                               c(X, "B",    round(sum(res_BaryGrand$EffectSize$SS_.b.D), 3),   round(res_BaryGrand$EffectSize$SS_.b.., 3),   round(res_BaryGrand$EffectSize$SS_b_BETWEEN, 3)),
+                                               c(X, "A(B)", round(sum(res_BaryGrand$EffectSize$SS_aINb.D), 3), round(res_BaryGrand$EffectSize$SS_aINb.., 3), X)))
 
 
 
@@ -439,9 +453,9 @@ EigenDiDiSTATIS <- function(Hierarchy_of_tables, DESIGN_rows, DESIGN_tables, n2k
   colnames(Confusion_Rows) <- paste0(DESIGN_rows$labels, "_predicted")
   Prediction_Fixed_Rows$Confusion_Rows <- Confusion_Rows
 
-  Prediction_Fixed_Rows$Confusion_Rows_norm <- round(Prediction_Fixed_Rows$Confusion_Rows / rowSums(Prediction_Fixed_Rows$Confusion_Rows), 2)
+  Prediction_Fixed_Rows$Confusion_Rows_norm <- round(Prediction_Fixed_Rows$Confusion_Rows / rowSums(Prediction_Fixed_Rows$Confusion_Rows), 2) * 100
 
-
+  Prediction_Fixed_Rows$Class_accuracy <- mean(diag(Prediction_Fixed_Rows$Confusion_Rows_norm))
 
 
 
@@ -459,6 +473,8 @@ EigenDiDiSTATIS <- function(Hierarchy_of_tables, DESIGN_rows, DESIGN_tables, n2k
 
   Prediction_Fixed_Rows$Confusion_norm.d <- array(NA, dim=c(DESIGN_rows$B, DESIGN_rows$B, DESIGN_tables$D),
                                                   dimnames = list(paste0(DESIGN_rows$labels, "_actual"), paste0(DESIGN_rows$labels, "_predicted"), DESIGN_tables$labels))
+  Prediction_Fixed_Rows$Class_accuracy.d <- matrix(NA, DESIGN_tables$D)
+  rownames(Prediction_Fixed_Rows$Class_accuracy.d) <- DESIGN_tables$labels
 
   for(d in 1:DESIGN_tables$D){
     #Compute d2 from stimulus a(b) to all categories B (to give an a(b)xB matrix)
@@ -474,7 +490,9 @@ EigenDiDiSTATIS <- function(Hierarchy_of_tables, DESIGN_rows, DESIGN_tables, n2k
     #Transform the design matrix to give a confusion matrix
     Prediction_Fixed_Rows$Confusion.d[,,d] <- t(DESIGN_rows$mat) %*% Prediction_Fixed_Rows$prediction_rows_mat.d[,,d]
 
-    Prediction_Fixed_Rows$Confusion_norm.d[,,d] <- round(Prediction_Fixed_Rows$Confusion.d[,,d] / rowSums(Prediction_Fixed_Rows$Confusion.d[,,d]), 2)
+    Prediction_Fixed_Rows$Confusion_norm.d[,,d] <- round(Prediction_Fixed_Rows$Confusion.d[,,d] / rowSums(Prediction_Fixed_Rows$Confusion.d[,,d]), 2) * 100
+
+    Prediction_Fixed_Rows$Class_accuracy.d[d] <- mean(diag(Prediction_Fixed_Rows$Confusion_norm.d[,,d]))
   }
 
 

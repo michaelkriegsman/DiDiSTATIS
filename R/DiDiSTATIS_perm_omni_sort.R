@@ -21,16 +21,24 @@ DiDiSTATIS_perm_omni_sort <- function(input = NULL,
 
   ###Initialize objects
   RETURN_omni <- list()
-  RETURN_omni$SS_.b..           <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
-  RETURN_omni$SS_.b.D           <- array(NA, dim=c(input$DESIGN_tables$D, niter), dimnames = list(input$DESIGN_tables$labels, paste0("iter", 1:niter)))
-  RETURN_omni$SS_ab.D           <- array(NA, dim=c(input$DESIGN_tables$D, niter), dimnames = list(input$DESIGN_tables$labels, paste0("iter", 1:niter)))
-  RETURN_omni$SS_plain..        <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
-  RETURN_omni$SS_b_BETWEEN      <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
-  RETURN_omni$SS_b_WITHIN       <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
-  RETURN_omni$r2_Categories     <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
-  RETURN_omni$r2_Groups         <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
-  RETURN_omni$r2_BD_ABCD        <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
-  RETURN_omni$r2_Plain_Disc_..  <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$SS_.b..                  <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$SS_.b.D                  <- array(NA, dim=c(input$DESIGN_tables$D, niter), dimnames = list(input$DESIGN_tables$labels, paste0("iter", 1:niter)))
+  RETURN_omni$SS_ab.D                  <- array(NA, dim=c(input$DESIGN_tables$D, niter), dimnames = list(input$DESIGN_tables$labels, paste0("iter", 1:niter)))
+  RETURN_omni$SS_plain..               <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$SS_b_BETWEEN             <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$SS_b_WITHIN              <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_Categories..          <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_Categories.D          <- array(NA, dim=c(input$DESIGN_tables$D, niter), dimnames = list(input$DESIGN_tables$labels, paste0("iter", 1:niter)))
+  # RETURN_omni$r2_Categories.D_summed   <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  # RETURN_omni$r2_CategoriesCD_summed   <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_Groups_b              <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_Groups_Disc           <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_BD_ABCD               <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_Plain_Disc_..         <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_Plain_Disc_.D         <- array(NA, dim=c(input$DESIGN_tables$D, niter), dimnames = list(input$DESIGN_tables$labels, paste0("iter", 1:niter)))
+  # RETURN_omni$r2_Plain_Disc_.D_summed  <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  # RETURN_omni$r2_Plain_Disc_CD         <- array(NA, dim=c(input$DESIGN_tables$CD,niter), dimnames = list(rownames(input$DESIGN_tables$mat), paste0("iter", 1:niter)))
+  # RETURN_omni$r2_Plain_Disc_CD_summed  <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
 
 
 
@@ -63,10 +71,18 @@ DiDiSTATIS_perm_omni_sort <- function(input = NULL,
     RETURN_omni$SS_plain..[i]       <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$SS_plain..
     RETURN_omni$SS_b_BETWEEN[i]     <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$SS_b_BETWEEN
     RETURN_omni$SS_b_WITHIN[i]      <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$SS_b_WITHIN
-    RETURN_omni$r2_Categories[i]    <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Categories
-    RETURN_omni$r2_Groups[i]        <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Groups
+    RETURN_omni$r2_Categories..[i]  <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Categories..
+    RETURN_omni$r2_Categories.D[,i] <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Categories.D
+    # RETURN_omni$r2_Categories.D_summed[i] <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Categories.D_summed
+    # RETURN_omni$r2_CategoriesCD_summed[i] <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_CategoriesCD_summed
+    RETURN_omni$r2_Groups_b[i]      <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Groups_b
+    RETURN_omni$r2_Groups_Disc[i]   <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Groups_Disc
     RETURN_omni$r2_BD_ABCD[i]       <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_BD_ABCD
     RETURN_omni$r2_Plain_Disc_..[i] <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_Disc_..
+    RETURN_omni$r2_Plain_Disc_.D[,i]<- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_Disc_.D
+    # RETURN_omni$r2_Plain_Disc_.D_summed[i]<- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_Disc_.D_summed
+    # RETURN_omni$r2_Plain_Disc_CD[,i]<- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_Disc_CD
+    # RETURN_omni$r2_Plain_Disc_CD_summed[i]<- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_Disc_CD_summed
 
   }
 
