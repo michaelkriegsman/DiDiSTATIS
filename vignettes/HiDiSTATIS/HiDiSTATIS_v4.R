@@ -10,7 +10,7 @@ source('C:/Users/Michael A. Kriegsman/Box Sync/Dissertation/RStudio2Git/DiDiSTAT
 res_HiDiSTATIS <- HiDiSTATIS(DATA = Sort_balanced, data_are = 'sort',
                              DESIGN_rows = DESIGN$rows$Comp,
                              DESIGN_tables = DESIGN$tables$MusExp, n2k=NULL,
-                             Perm_tables = F, Perm_tables_niter = 1000,
+                             Perm_tables = T, Perm_tables_niter = 1000,
                              Boot_tables = F, Boot_tables_niter = 1000)
 
   # cbind(res_HiDiSTATIS$input$DESIGN_tables$vec,

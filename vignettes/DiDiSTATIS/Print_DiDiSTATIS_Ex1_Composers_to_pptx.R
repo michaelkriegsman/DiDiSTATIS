@@ -84,8 +84,7 @@ doc <- addTitle(doc, paste0("Grand Results"))
 doc <- addSlide(doc, "Two Content")
 doc <- addTitle(doc, "F_Disc^.. & Confusion_Grand_Fixed")
 #
-plot_FAB.. <- function(){ Plot_DiDiSTATIS_FAB..(res_DiDiSTATIS, axes = c(1,2),
-                                                Flip_axis1 = Flip_axis1, Flip_axis2 = Flip_axis2, dev.new = F) }
+plot_FAB.. <- function(){ Plot_DiDiSTATIS_FAB..(res_DiDiSTATIS, axes = c(1,2), Flip_axis1 = Flip_axis1, Flip_axis2 = Flip_axis2, dev.new = F) }
 doc <- addPlot(doc, plot_FAB.., vector.graphic = TRUE)
 #
 plot_Confusion_Fixed_Grand <- function(){ PlotConfusion(res_DiDiSTATIS$res_BaryGrand$Prediction_Fixed_Rows$Confusion_Rows, scale_max_100 = F, dev_new = F) }
@@ -135,10 +134,10 @@ dimnames(Perfect_Conf_norm) <- dimnames(res_DiDiSTATIS$res_BaryGrand$Prediction_
 #+++++++++++++++++++++++
 doc <- addSlide(doc, "Two Content")
 doc <- addTitle(doc, "Perfect Confusion Example")
-plot_LOO_Grand <- function(){ PlotConfusion(Perfect_Conf_norm, scale_max_100 = T, dev_new = F) }
-doc <- addPlot(doc, plot_LOO_Grand, vector.graphic = TRUE)
-plot_LOO_Grand_Signed_Ctrb <- function(){ PlotConfusion_norm_SignedCtrb(Perfect_Conf_norm, DESIGN_rows = res_DiDiSTATIS$input$DESIGN_rows, scale_max_100 = T, dev_new = F) }
-doc <- addPlot(doc, plot_LOO_Grand_Signed_Ctrb, vector.graphic = TRUE)
+Perf_conf_norm <- function(){ PlotConfusion(Perfect_Conf_norm, scale_max_100 = T, dev_new = F) }
+doc <- addPlot(doc, Perf_conf_norm, vector.graphic = TRUE)
+Perf_signed_ctrb_norm <- function(){ PlotConfusion_norm_SignedCtrb(Perfect_Conf_norm, DESIGN_rows = res_DiDiSTATIS$input$DESIGN_rows, scale_max_100 = T, dev_new = F) }
+doc <- addPlot(doc, Perf_signed_ctrb_norm, vector.graphic = TRUE)
 
 
 
@@ -154,8 +153,7 @@ doc <- addTitle(doc, paste0("Group Results"))
 #+++++++++++++++++++++++
 doc <- addSlide(doc, "Two Content")
 doc <- addTitle(doc, "F.B.D")
-plot_F.B.D <- function(){ Plot_DiDiSTATIS_F.B.D(res_DiDiSTATIS, axes = c(1,2),
-                                                Flip_axis1 = Flip_axis1, Flip_axis2 = Flip_axis2, dev.new = F) }
+plot_F.B.D <- function(){ Plot_DiDiSTATIS_F.B.D(res_DiDiSTATIS, axes = c(1,2), Flip_axis1 = Flip_axis1, Flip_axis2 = Flip_axis2, dev.new = F) }
 doc <- addPlot(doc, plot_F.B.D, vector.graphic = TRUE)
 doc <- addParagraph(doc, paste0("r2_Group_b = ", round(res_DiDiSTATIS$res_BaryGrand$EffectSize$r2_Groups_b,2)))
 
@@ -178,7 +176,7 @@ for(d in 1:res_DiDiSTATIS$input$DESIGN_tables$D){
   # Slides 8-10 : Add plot: Confusion_Fixed_Group_d & FABd
   #+++++++++++++++++++++++
   doc <- addSlide(doc, "Two Content")
-  doc <- addTitle(doc, paste0("Group: ", res_DiDiSTATIS$input$DESIGN_tables$labels[d], "\n Confusion_Fixed & F_AB^.d"))
+  doc <- addTitle(doc, paste0("Group: ", res_DiDiSTATIS$input$DESIGN_tables$labels[d], "\n F_AB^.d & Group_Confusion_Fixed"))
   Plot_FAB.d <- function(){ Plot_DiDiSTATIS_FaB.d(res_DiDiSTATIS, priority = "d", connect = d, quiet_B.. = T, axes = c(1,2),
                                                   Flip_axis1 = Flip_axis1, Flip_axis2 = Flip_axis2, dev.new = F) }
   doc <- addPlot(doc, Plot_FAB.d, vector.graphic = TRUE)

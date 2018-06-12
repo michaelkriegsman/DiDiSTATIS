@@ -40,7 +40,7 @@ Plot_DiDiSTATIS_F.B.D(res_DiDiSTATIS, axes = c(1,2), Flip_axis2 = F)
 
 Plot_DiDiSTATIS_FAB..(res_DiDiSTATIS, axes = c(3,2), Flip_axis2 = TRUE)
 Plot_DiDiSTATIS_FaB.d(res_DiDiSTATIS, priority = "ab", connect = c(8, 14, 31), quiet_B.. = TRUE)
-Plot_DiDiSTATIS_FaB.d(res_DiDiSTATIS, axes = c(3,2), priority = "d", connect = 3, quiet_B.. = TRUE, Flip_axis2 = TRUE)
+Plot_DiDiSTATIS_FaB.d(res_DiDiSTATIS, axes = c(1,2), priority = "d", connect = c(3,4), quiet_B.. = TRUE, Flip_axis2 = F)
 
 Plot_DiDiSTATIS_FabCd(res_DiDiSTATIS, ab = 1, d = 1)
 
