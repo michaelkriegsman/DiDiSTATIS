@@ -9,12 +9,12 @@ DiDiSTATIS(DATA, data_are = "sort", n2k = NULL, DESIGN_rows = NULL,
   MFA2_Flag = TRUE, RV2_Flag = TRUE, Perm_omni_sort = F,
   Perm_omni_sort_niter = 1000, Boot_tables = F, Boot_tables_niter = 1000,
   LOO_rows = F, LOO_rows_multiplier = 10, SH_rows = F,
-  SH_rows_niter = 1000)
+  SH_rows_niter = 100)
 }
 \arguments{
 \item{DATA}{The data}
 
-\item{data_are}{Flag to indicate data type #sort, d_array, d2_array, CP_array}
+\item{data_are}{Flag to indicate data type #sort, sort_dist, d_array, d2_array, CP_array}
 
 \item{n2k}{Number (of components) to keep}
 

@@ -248,7 +248,7 @@ DiDiSTATIS_LOO_rows <- function(input, Hierarchy_of_tables, res_BaryGrand, multi
   returnME$Group$Prediction_array_D_sum <- Prediction_array_D_sum
   returnME$Group$Confusion_rand_D       <- Confusion_rand_D
   returnME$Group$Confusion_rand_D_norm  <- Confusion_rand_D_norm
-
+  returnME$Group$Class_accuracy_D       <- Class_accuracy_D
 
 
   return(returnME)

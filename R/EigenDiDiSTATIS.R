@@ -185,6 +185,9 @@ EigenDiDiSTATIS <- function(Hierarchy_of_tables, DESIGN_rows, DESIGN_tables, n2k
   res_BaryGrand$EffectSize$r2_Groups_Disc  <- res_BaryGrand$EffectSize$SS_disc_BETWEEN / (res_BaryGrand$EffectSize$SS_disc_BETWEEN + res_BaryGrand$EffectSize$SS_disc_WITHIN)
   res_BaryGrand$EffectSize$r2_BD_ABCD    <- sum(res_BaryGrand$EffectSize$SS_.b.D) / sum(res_BaryGrand$EffectSize$SS_abCD)
 
+  res_BaryGrand$EffectSize$r2_Plain_b_.. <- res_BaryGrand$EffectSize$SS_.b.. / res_BaryGrand$EffectSize$SS_plain..
+  res_BaryGrand$EffectSize$r2_Plain_b_.D <- res_BaryGrand$EffectSize$SS_.b.D / res_BaryGrand$EffectSize$SS_plain.D
+
   res_BaryGrand$EffectSize$r2_Plain_Disc_.. <- res_BaryGrand$EffectSize$SS_ab.. / res_BaryGrand$EffectSize$SS_plain..
   res_BaryGrand$EffectSize$r2_Plain_Disc_.D <- res_BaryGrand$EffectSize$SS_ab.D / res_BaryGrand$EffectSize$SS_plain.D
   res_BaryGrand$EffectSize$r2_Plain_Disc_.D_summed <- sum(res_BaryGrand$EffectSize$SS_ab.D) / sum(res_BaryGrand$EffectSize$SS_plain.D)

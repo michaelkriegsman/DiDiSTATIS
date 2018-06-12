@@ -232,11 +232,12 @@ DiDiSTATIS_SH_rows <- function(input, Hierarchy_of_tables, res_BaryGrand, niter 
   returnME$Grand$Prediction_array_sum   <- Prediction_array_sum
   returnME$Grand$Confusion_rand         <- Confusion_rand
   returnME$Grand$Confusion_rand_norm    <- Confusion_rand_norm
+  returnME$Grand$Class_accuracy         <- Class_accuracy
   returnME$Group$Prediction_array_D     <- Prediction_array_D
   returnME$Group$Prediction_array_D_sum <- Prediction_array_D_sum
   returnME$Group$Confusion_rand_D       <- Confusion_rand_D
   returnME$Group$Confusion_rand_D_norm  <- Confusion_rand_D_norm
-
+  returnME$Group$Class_accuracy_D       <- Class_accuracy_D
 
 
   return(returnME)

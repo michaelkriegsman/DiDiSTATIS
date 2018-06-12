@@ -9,7 +9,7 @@ GetCP_array(DATA, data_are = NULL)
 \arguments{
 \item{DATA}{The data}
 
-\item{data_are}{Flag to indicate data type #sort, d_array, d2_array, CP_array}
+\item{data_are}{Flag to indicate data type #sort, sort_dist, d_array, d2_array, CP_array}
 }
 \value{
 An array of cross-product matrices

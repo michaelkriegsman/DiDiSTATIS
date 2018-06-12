@@ -15,7 +15,7 @@ DiDiSTATIS_perm_omni_sort <- function(input = NULL,
                                       res_BaryGrand = NULL,
                                       niter = 100){
 
-  if(input$data_are!='sort'){return(paste0('DATA are not sorting data. Check "data_are".'))}
+  if(input$data_are!='sort' & input$data_are!='sort_dist'){return(paste0('DATA are not sorting data. Check "data_are".'))}
 
 
 
@@ -34,6 +34,8 @@ DiDiSTATIS_perm_omni_sort <- function(input = NULL,
   RETURN_omni$r2_Groups_b              <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
   RETURN_omni$r2_Groups_Disc           <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
   RETURN_omni$r2_BD_ABCD               <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_Plain_b_..            <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
+  RETURN_omni$r2_Plain_b_.D            <- array(NA, dim=c(input$DESIGN_tables$D, niter), dimnames = list(input$DESIGN_tables$labels, paste0("iter", 1:niter)))
   RETURN_omni$r2_Plain_Disc_..         <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
   RETURN_omni$r2_Plain_Disc_.D         <- array(NA, dim=c(input$DESIGN_tables$D, niter), dimnames = list(input$DESIGN_tables$labels, paste0("iter", 1:niter)))
   # RETURN_omni$r2_Plain_Disc_.D_summed  <- array(NA, dim=c(1,                     niter), dimnames = list(c(), paste0("iter", 1:niter)))
@@ -78,6 +80,8 @@ DiDiSTATIS_perm_omni_sort <- function(input = NULL,
     RETURN_omni$r2_Groups_b[i]      <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Groups_b
     RETURN_omni$r2_Groups_Disc[i]   <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Groups_Disc
     RETURN_omni$r2_BD_ABCD[i]       <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_BD_ABCD
+    RETURN_omni$r2_Plain_b_..       <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_b_..
+    RETURN_omni$r2_Plain_b_.D       <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_b_.D
     RETURN_omni$r2_Plain_Disc_..[i] <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_Disc_..
     RETURN_omni$r2_Plain_Disc_.D[,i]<- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_Disc_.D
     # RETURN_omni$r2_Plain_Disc_.D_summed[i]<- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_Disc_.D_summed

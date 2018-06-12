@@ -4,7 +4,7 @@
 #'Conduct Discriminant DiSTATIS
 #'
 #'@param DATA The data
-#'@param data_are Flag to indicate data type #sort, d_array, d2_array, CP_array
+#'@param data_are Flag to indicate data type #sort, sort_dist, d_array, d2_array, CP_array
 #'@param DESIGN_rows DESIGN matrix for the rows
 #'@param DESIGN_tables DESIGN matrix for the tables
 #'@param MFA1_Flag #TRUE gives MFA-norm; FALSE gives no norm
@@ -30,7 +30,7 @@ DiDiSTATIS <- function(DATA, data_are = 'sort', n2k = NULL,
                        Perm_omni_sort = F, Perm_omni_sort_niter=1000,
                        Boot_tables = F, Boot_tables_niter = 1000,
                        LOO_rows = F, LOO_rows_multiplier=10,
-                       SH_rows = F, SH_rows_niter=1000){
+                       SH_rows = F, SH_rows_niter=100){
 
   #Convert data to CP
   CP_array <- GetCP_array(DATA, data_are)
@@ -58,6 +58,7 @@ DiDiSTATIS <- function(DATA, data_are = 'sort', n2k = NULL,
 
   ##Step 3: Inference
   if(Perm_omni_sort==TRUE){
+    if(data_are=="sort_dist") {input$DATA <- SortFromSortDist(DATA)}
     Perm_Omnibus <- DiDiSTATIS_perm_omni_sort(input = input,
                                               Hierarchy_of_tables = Hierarchy_of_tables,
                                               res_BaryGrand = res_BaryGrand,
