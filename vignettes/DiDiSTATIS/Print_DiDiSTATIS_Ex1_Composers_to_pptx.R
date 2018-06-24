@@ -48,8 +48,8 @@ doc <- addParagraph(doc, interpretation)
 # Slide 2 : Add plot: FabCd
 #+++++++++++++++++++++++
 doc <- addSlide(doc, "Content with Caption")
-ab <- 1
-d  <- 1
+ab <- abCd_ab
+d  <- abCd_d
 doc <- addTitle(doc, paste0("FabCd, ab = ", ab, ", d = ", d))
 plot_FabCd <- function(){ Plot_DiDiSTATIS_FabCd(res_DiDiSTATIS, ab = ab, d = d, quiet_B.. = TRUE,
                                                 Flip_axis1 = Flip_axis1, Flip_axis2 = Flip_axis2, dev.new = F) }
