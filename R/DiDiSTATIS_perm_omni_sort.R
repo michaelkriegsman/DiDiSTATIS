@@ -80,8 +80,8 @@ DiDiSTATIS_perm_omni_sort <- function(input = NULL,
     RETURN_omni$r2_Groups_b[i]      <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Groups_b
     RETURN_omni$r2_Groups_Disc[i]   <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Groups_Disc
     RETURN_omni$r2_BD_ABCD[i]       <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_BD_ABCD
-    RETURN_omni$r2_Plain_b_..       <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_b_..
-    RETURN_omni$r2_Plain_b_.D       <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_b_.D
+    RETURN_omni$r2_Plain_b_..[i]    <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_b_..
+    RETURN_omni$r2_Plain_b_.D[,i]   <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_b_.D
     RETURN_omni$r2_Plain_Disc_..[i] <- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_Disc_..
     RETURN_omni$r2_Plain_Disc_.D[,i]<- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_Disc_.D
     # RETURN_omni$r2_Plain_Disc_.D_summed[i]<- res_DiDiSTATIS_omni$res_BaryGrand$EffectSize$r2_Plain_Disc_.D_summed
