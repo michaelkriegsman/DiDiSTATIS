@@ -117,5 +117,5 @@ res_DiDiSTATIS_AV_MFA2_F <- DiDiSTATIS(DATA = Sort_balanced, data_are = 'sort', 
                                        SH_rows = T,        SH_rows_niter = 100)
 
 res_DiDiSTATIS_AV_MFA2_F$TheTable <- DiDiSTATIS_Summary_Stats_Table(res_DiDiSTATIS_AV_MFA2_F)
-Print_res2ppt_DiDiSTATIS(res_DiDiSTATIS = res_DiDiSTATIS_AV_MFA2_F, main = "Music - AV")
-
+Print_res2ppt_DiDiSTATIS(res_DiDiSTATIS = res_DiDiSTATIS_AV_MFA2_F, main = "Music - AV", Flip_axis2 = T)
+Print_res2ppt_DiDiSTATIS(res_DiDiSTATIS = res_DiDiSTATIS_AV_MFA2_F, axes = c(3,2), main = "Music - AV", Flip_axis2 = T)

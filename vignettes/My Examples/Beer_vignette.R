@@ -114,7 +114,9 @@ res_Brewery_MFA_F <- DiDiSTATIS(DATA = GiantBeerCube, data_are = "sort_dist", n2
 res_Brewery_MFA_F$TheTable <- DiDiSTATIS_Summary_Stats_Table(res_Brewery_MFA_F)
 Print_res2ppt_DiDiSTATIS(res_Brewery_MFA_F, main = "Beer - Brewery Hypothesis")
 
+Plot_DiDiSTATIS_Perm_r2_Plain_b_..(res_Brewery_MFA_F)
 
+Plot_DiDiSTATIS_Perm_r2_Categories.D(res_Brewery_MFA_F)
 
 
 
