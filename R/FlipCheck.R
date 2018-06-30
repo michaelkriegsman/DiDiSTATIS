@@ -7,8 +7,8 @@
 #' @export
 
 FlipCheck <- function(F){
-  if(round(sum(F[,1]),10)<0){
-    F[,1] <- F[,1] * -1
+  if(round(sum(as.matrix(F)[,1]),10)<0){
+    as.matrix(F)[,1] <- as.matrix(F)[,1] * -1
   }
 
   return(F)
