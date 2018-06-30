@@ -36,7 +36,7 @@ EigenCP <- function(CP, n2k=NULL){
 
   #Lambda
   res_CP$eig$Lambda <- diag(as.matrix(res_CP$eig$Lambda_vec))
-  colnames(res_CP$eig$Lambda) <- list(paste('Comp ', indToKeep, sep=""), paste('Comp ', indToKeep, sep=""))
+  dimnames(res_CP$eig$Lambda) <- list(paste('Comp ', indToKeep, sep=""), paste('Comp ', indToKeep, sep=""))
 
   #PojMat
   res_CP$eig$ProjMat <- res_CP$eig$U %*% solve(res_CP$eig$Lambda^(1/2))
