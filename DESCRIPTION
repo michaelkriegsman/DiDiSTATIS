@@ -7,7 +7,6 @@ Maintainer: Michael A. Kriegsman <kriegsman.1@gmail.com>
 Description: This package runs the multivariate statistical methods
     developed in my dissertation, namely DiMDS, HiDiSTATIS, and DiDiSTATIS. 
 Depends:
-    PlotDiDiSTATIS, 
     DistatisR,
     ExPosition,
     prettyGraphs,
