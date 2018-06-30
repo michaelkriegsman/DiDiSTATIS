@@ -29,14 +29,14 @@ EigenCP <- function(CP, n2k=NULL){
 
   #U
   res_CP$eig$U <- FlipCheck(res$vectors[,indToKeep])
-  dimnames(res_CP$eig$U) <- list(rownames(CP), paste('Comp ', indToKeep, sep=""))
+  ### dimnames(res_CP$eig$U) <- list(rownames(CP), paste('Comp ', indToKeep, sep=""))
 
   #Lambda_vec
   res_CP$eig$Lambda_vec <- res$values[indToKeep]
 
   #Lambda
   res_CP$eig$Lambda <- diag(as.matrix(res_CP$eig$Lambda_vec))
-  dimnames(res_CP$eig$Lambda) <- list(paste('Comp ', indToKeep, sep=""), paste('Comp ', indToKeep, sep=""))
+  ### dimnames(res_CP$eig$Lambda) <- list(paste('Comp ', indToKeep, sep=""), paste('Comp ', indToKeep, sep=""))
 
   #PojMat
   res_CP$eig$ProjMat <- res_CP$eig$U %*% solve(res_CP$eig$Lambda^(1/2))
